@@ -1,0 +1,296 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "distinfo"
+version = "0.3.0.dev0"
+description = "Extract metadata from Python source and binary distributions"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "GPL-3.0-or-later"}
+keywords = ["packaging", "metadata", "sdist"]
+authors = [{name = "Arthur Noel", email = "arthur@0compute.net"}]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: POSIX",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Build Tools",
+    "Topic :: System :: Archiving :: Packaging",
+    "Topic :: System :: Software Distribution",
+]
+dependencies = [
+    "aiofiles",
+    "anyio",
+    "atools",
+    "click",
+    "coloredlogs",
+    "deepmerge",
+    "msgpack",
+    "packaging",
+    "pyproject-metadata",
+    "python-box",
+    "pyyaml",
+    "tomli; python_version < '3.11'",
+    "verboselogs",
+    # these two are the default [build-system].requires so must be present
+    # see: https://peps.python.org/pep-0518/#build-system-table
+    "setuptools",
+    "wheel",
+]
+
+[project.optional-dependencies]
+dev = [
+    "distinfo[tools]",
+    # lint
+    "pre-commit",
+    "vulture",
+    "yamlfix",
+    "yamllint",
+    # format
+    "black",
+    "isort",
+    # typing
+    "mypy[dmypy]",
+    "types-aiofiles",
+    "types-PyYAML",
+    "types-setuptools",
+    "types-toml",
+    # lsp
+    "pyls-isort",
+    "pyls-memestra",
+    "pylsp-mypy",
+    # TimeoutError in pylsp.workspace.Workspace._progress_begin, same with "python-lsp-server[rope]"
+    # "pylsp-rope",
+    "python-lsp-black",
+    "python-lsp-server",
+    # use instead of python-lsp-ruff so python-lsp-server has less to do
+    "ruff-lsp",
+    # debug
+    "pdbpp",
+    "ptpython",
+    # profile
+    "py-spy",
+    "pyinstrument",
+    "snakeviz",
+    "yappi",
+    # test
+    "pytest-cov",
+    "pytest-sugar",
+    "pytest-xdist",
+    # used by tests/covconfig.py
+    "toml",
+]
+test = [
+    "pytest-asyncio",
+    "httpx",
+]
+# these are widely-used PEP 517 build backends (and their plugins) or setuptools
+# extensions, they are required in order to extract some projects' metadata
+tools = [
+    "cffi",
+    "cython",
+    "flit-core",
+    "hatchling",
+    "poetry-core",
+    "setuptools-rust",
+    "setuptools-scm",
+]
+
+[project.scripts]
+distinfo = "distinfo.cli:main"
+
+[project.urls]
+homepage = "https://github.com/0compute/distinfo"
+
+[tool.black]
+target-version = ["py310"]
+
+[tool.coverage.html]
+directory = ".htmlcov"
+show_contexts = true
+
+[tool.coverage.run]
+branch = true
+concurrency = ["thread"]
+data_file = ".coverage"
+parallel = true
+source = [
+    "distinfo",
+    "tests",
+]
+
+[tool.coverage.xml]
+output = "coverage.xml"
+
+[tool.coverage.report]
+exclude_lines = [
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+    "pragma: no cover",
+    "@overload",
+    "pass",
+]
+# fail_under = 100
+omit = [
+    "tests/covcfg.py",
+    "tests/sitecustomize.py",
+    "tests/whitelist.py",
+]
+# don't skip covered because we want to see what contexts exercise a code path
+# skip_covered = true
+
+[tool.isort]
+profile = "black"
+combine_as_imports = true
+
+[tool.mypy]
+allow_untyped_defs = false
+cache_fine_grained = true
+check_untyped_defs = true
+# left to ruff
+disable_error_code = "name-defined,syntax"
+# speed issue
+follow_imports = "skip"
+ignore_missing_imports = true
+show_error_codes = true
+strict_optional = false
+# nice in theory, practically mypy is fukt and enabling this will lead you down
+# an endless trail of casts
+# warn_return_any = true
+warn_no_return = false
+warn_redundant_casts = true
+warn_unreachable = true
+warn_unused_configs = true
+warn_unused_ignores = true
+exclude = [
+    # single quotes is a literal string
+    '^/nix/store/.*',
+    '^.result.*',
+    '^result.*',
+]
+
+[[tool.mypy.overrides]]
+# setuptools.sandbox typing stub is incomplete
+# cannot infer type of self.path
+module = "distinfo.collector.metadata.dirty.setuptoolsmetadata"
+disable_error_code = "attr-defined,has-type"
+
+[[tool.mypy.overrides]]
+# assigning to a function
+module = "tests.conftest"
+disable_error_code = "assignment"
+
+[tool.pylsp-mypy]
+enabled = true
+dmypy = true
+dmypy_status_file = ".dmypy-pylsp.json"
+live_mode = false
+report_progress = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+addopts = """
+    --show-capture stdout
+    --show-capture stderr
+    --showlocals
+    --tb short
+"""
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::UserWarning",
+]
+
+[tool.ruff]
+extend-exclude = [
+    ".result*",
+    ".skel*",
+    "result*",
+]
+force-exclude = true
+ignore = [
+    # mccabe
+    "C90",
+    # pydocstyle
+    "D",
+    # pylint
+    "PL",
+    # shadowing a python builtin
+    "A001",
+    # Missing type annotation for `self` in method
+    "ANN101",
+    # Missing type annotation for `cls` in classmethod
+    "ANN102",
+    # Dynamically typed expressions (typing.Any) are disallowed
+    "ANN401",
+    # Do not catch blind exception: `Exception
+    "BLE001",
+    # unnecessary dict call
+    "C408",
+    # Trailing comma missing
+    "COM812",
+    # commented-out code - selected in pre-commit
+    "ERA001",
+    # line too long
+    "E501",
+    # Exception must not use a string literal
+    "EM101",
+    # Exception must not use an f-string literal
+    "EM102",
+    # Logging statement uses f-string
+    "G004",
+    # `inplace=True` should be avoided - what's this?
+    "PD002",
+    # pytest.raises(...)` is too broad
+    "PT011",
+    # Missing explicit `return` at the end of function able to return non-`None` value
+    "RET503",
+    # github: Requests call without timeout
+    "S113",
+    # Private member accessed
+    "SLF001",
+    # I permit myself to print
+    "T201",
+    # Relative imports from parent modules are banned
+    "TID252",
+    # Create your own exception
+    "TRY002",
+    # Avoid specifying long messages outside the exception class
+    "TRY003",
+    # Use `super()`: can't because we're using dataclasses with slots
+    "UP008",
+]
+ignore-init-module-imports = true
+select = [ "ALL" ]
+show-fixes = true
+show-source = true
+target-version = "py310"
+task-tags = ["FIXME", "HACK", "TODO", "TOGO", "XXX"]
+
+[tool.ruff.flake8-annotations]
+mypy-init-return = true
+
+[tool.ruff.isort]
+combine-as-imports = true
+required-imports = ["from __future__ import annotations"]
+
+[tool.ruff.per-file-ignores]
+# use of assert
+"tests/*" = ["S101"]
+# imported but unused
+"__init__.py" = ["F401"]
+
+[tool.vulture]
+exclude = [
+    ".result*/",
+    "result*/",
+    ]
+
+[tool.yamlfix]
+explicit_start = false
+line_length = 100
+sequence_style = "keep_style"
+section_whitelines = 1

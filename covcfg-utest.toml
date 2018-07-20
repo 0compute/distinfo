@@ -1,0 +1,17 @@
+[html]
+title = "Unit Test Coverage Report"
+
+[report]
+exclude_lines = [
+    "pragma: no utest cover",
+    "pragma: no utest ftest cover",
+]
+omit = [
+    "distinfo/__main__.py",
+    "distinfo/cli.py",
+    "distinfo/command.py",
+    "distinfo/collector/*",
+    "distinfo/logconfig.py",
+    "tests/acceptance/*",
+    "tests/functional/*",
+]

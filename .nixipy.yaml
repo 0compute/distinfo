@@ -1,0 +1,12 @@
+packages:
+  # TODO: package self config should be in pyproject.toml
+  distinfo:
+    _.source_exclude: default.nix
+    checkPhase: pytest -x tests/unit tests/functional
+    preShellHook: rm -rf *.dist-info *.egg-info
+    propagatedNativeBuildInputs: pkgs.coreutils pkgs.findutils pkgs.gitMinimal pkgs.gnutar pkgs.unzip
+  pyproject-metadata:
+    # https://github.com/FFY00/python-pyproject-metadata/pull/58
+    patches:
+      - url: https://github.com/kingarrrt/python-pyproject-metadata/commit/a4f4ae769d64ee4c41de4afdfaf9c060c6728c17.patch
+        sha256: sha256-4ZvT1Tp5NpzzxLoDMnFbN6nSkOpByTCmpUi0JVxndzk=

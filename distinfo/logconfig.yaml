@@ -1,0 +1,38 @@
+# passed to coloredlogs.install
+# see https://coloredlogs.readthedocs.io/en/latest/api.html#coloredlogs.install
+config:
+  fmt: '%(relativeCreated)d %(message)s'
+  debug_fmt: '%(relativeCreated)d %(name)s %(message)s'
+  level_styles:
+    # this is tuned for solarized, see `humanfriendly --demo` for options
+    spam:
+      color: green
+      bright: true
+    debug:
+      color: yellow
+      bright: true
+    verbose:
+      color: blue
+      # bright: true
+    info:
+      color: cyan
+      bright: true
+    notice:
+      color: white
+      bright: true
+    warning:
+      color: yellow
+      bold: true
+    success:
+      color: green
+      bold: true
+    error:
+      color: red
+      bright: true
+    critical:
+      color: red
+      bold: true
+
+# logger levels
+loggers:
+  asyncio: info

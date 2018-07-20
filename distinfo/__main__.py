@@ -1,7 +1,6 @@
-import sys
+from __future__ import annotations
 
-from .cli import main
+from distinfo.cli import main
 
-
-if __name__ == "__main__":
-    sys.exit(main())  # pylint: disable=no-value-for-parameter
+if __name__ == "__main__":  # pragma: no branch
+    main()

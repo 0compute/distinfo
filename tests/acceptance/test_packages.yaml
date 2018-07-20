@@ -1,0 +1,648 @@
+# requires cffi
+cryptography:
+  39.0.2:
+    ext:
+      cargo: src/rust
+      packages:
+        - cryptography
+      tests:
+        - tests
+    requires:
+      build_system_requires:
+        - cffi>=1.12
+        - setuptools!=60.9.0,>=40.6.0
+        - setuptools-rust>=0.11.4
+      docs:
+        - sphinx-rtd-theme>=1.1.1
+        - sphinx>=5.3.0
+      docstest:
+        - pyenchant>=1.6.11
+        - sphinxcontrib-spelling>=4.0.1
+        - twine>=1.12.0
+      pep8test:
+        - black
+        - check-manifest
+        - mypy
+        - ruff
+        - types-pytz
+        - types-requests
+      run:
+        - cffi>=1.12
+      sdist:
+        - setuptools-rust>=0.11.4
+      ssh:
+        - bcrypt>=3.1.5
+      test:
+        - hypothesis!=3.79.2,>=1.11.4
+        - iso8601
+        - pretend
+        - pytest-benchmark
+        - pytest-cov
+        - pytest-shard>=0.1.2
+        - pytest-subtests
+        - pytest-xdist
+        - pytest>=6.2.0
+        - pytz
+      test_randomorder:
+        - pytest-randomly
+      tox:
+        - tox
+  40.0.0:
+    ext:
+      cargo: src/rust
+      packages:
+        - cryptography
+      tests:
+        - tests
+    requires:
+      build_system_requires:
+        - cffi>=1.12
+        - setuptools!=60.9.0,>=40.6.0
+        - setuptools-rust>=0.11.4
+      docs:
+        - sphinx-rtd-theme>=1.1.1
+        - sphinx>=5.3.0
+      docstest:
+        - pyenchant>=1.6.11
+        - sphinxcontrib-spelling>=4.0.1
+        - twine>=1.12.0
+      pep8test:
+        - black
+        - check-manifest
+        - mypy
+        - ruff
+      run:
+        - cffi>=1.12
+      sdist:
+        - setuptools-rust>=0.11.4
+      ssh:
+        - bcrypt>=3.1.5
+      test:
+        - iso8601
+        - pretend
+        - pytest-benchmark
+        - pytest-cov
+        - pytest-shard>=0.1.2
+        - pytest-subtests
+        - pytest-xdist
+        - pytest>=6.2.0
+      test_randomorder:
+        - pytest-randomly
+      tox:
+        - tox
+
+# writes to stdout at C level
+debugpy:
+  1.6.0:
+    archive: zip
+    ext:
+      packages:
+        - debugpy
+
+# pyproject dynamic
+domdf_python_tools:
+  3.6.0:
+    ext:
+      packages:
+        - domdf_python_tools
+    requires:
+      all:
+        - pytz>=2019.1
+      build_system_requires:
+        - setuptools!=61.*,>=40.6.0
+        - wheel>=0.34.2
+      dates:
+        - pytz>=2019.1
+      run:
+        - natsort>=7.0.1
+        - typing-extensions>=3.7.4.1
+
+dovado:
+  0.4.1:
+    ext:
+      format: setuptools
+      modules:
+        - dovado
+      scripts:
+        - dovado.py
+    requires:
+      console:
+        - docopt
+      run:
+        - netifaces
+
+flit_core:
+  # build.BuildSystemTableValidationError: Failed to validate `build-system` in
+  # pyproject.toml: `backend-path` must be an array of strings
+  2.0:
+    ext:
+      packages:
+        - flit_core
+      tests:
+        - flit_core/tests
+  3.8.0:
+    ext:
+      packages:
+        - flit_core
+      tests:
+        - flit_core/tests
+
+# missing build-system in pyproject.toml
+fonttools:
+  4.39.2:
+    archive: zip
+    ext:
+      format: setuptools
+      packages:
+        - fontTools
+      tests:
+        - Tests
+    requires:
+      all:
+        - brotli>=1.0.1
+        - fs<3,>=2.2.0
+        - lxml<5,>=4.0
+        - lz4>=1.7.4.2
+        - matplotlib
+        - scipy
+        - skia-pathops>=0.5.0
+        - sympy
+        - uharfbuzz>=0.23.0
+        - unicodedata2>=15.0.0
+        - zopfli>=0.1.4
+      graphite:
+        - lz4>=1.7.4.2
+      interpolatable:
+        - scipy
+      lxml:
+        - lxml<5,>=4.0
+      pathops:
+        - skia-pathops>=0.5.0
+      plot:
+        - matplotlib
+      repacker:
+        - uharfbuzz>=0.23.0
+      symfont:
+        - sympy
+      ufo:
+        - fs<3,>=2.2.0
+      unicode:
+        - unicodedata2>=15.0.0
+      woff:
+        - brotli>=1.0.1
+        - zopfli>=0.1.4
+
+# setup.py RuntimeError: Missing setup required dependencies: cppy.
+kiwisolver:
+  1.4.4:
+    ext:
+      packages:
+        - kiwisolver
+      tests:
+        - py/tests
+    requires:
+      build_system_requires:
+        - cppy>=1.2.0
+        - setuptools-scm[toml]>=3.4.3
+        - setuptools>=61.2
+
+# invalid requirement 'pytz>dev'
+kombu:
+  5.2.4:
+    ext:
+      format: setuptools
+      packages:
+        - kombu
+      tests:
+        - t
+    requires:
+      azureservicebus:
+        - azure-servicebus>=7.0.0
+      azurestoragequeues:
+        - azure-storage-queue
+      consul:
+        - python-consul>=0.6.0
+      librabbitmq:
+        - librabbitmq>=2.0.0
+      mongodb:
+        - pymongo<3.12.1,>=3.3.0
+      msgpack:
+        - msgpack
+      pyro:
+        - pyro4
+      qpid:
+        - qpid-python>=0.26
+        - qpid-tools>=0.26
+      redis:
+        - redis!=4.0.0,!=4.0.1,>=3.4.1
+      run:
+        - amqp<6.0.0,>=5.0.9
+        - vine
+      slmq:
+        - softlayer-messaging>=1.0.3
+      sqlalchemy:
+        - sqlalchemy
+      sqs:
+        - boto3>=1.9.12
+        - pycurl~=7.44.1
+        - urllib3>=1.26.7
+      test:
+        - pyro4
+        - pytest-sugar
+        - pytest~=7.0.1
+      yaml:
+        - pyyaml>=3.10
+      zookeeper:
+        - kazoo>=1.3.1
+
+maison:
+  1.4.0:
+    options:
+      include:
+        - classifier
+        - ext
+        - home_page
+        - license
+        - name
+        - project_url
+        - requires
+        - summary
+        - version
+    ext:
+      format: pyproject
+      packages:
+        - maison
+    requires:
+      build_system_requires:
+        - poetry-core>=1.0.0
+      run:
+        - click<9.0.0,>=8.0.1
+        - pydantic<2.0.0,>=1.8.2
+        - toml<0.11.0,>=0.10.2
+
+maxcube-api:
+  0.4.3:
+    ext:
+      format: setuptools
+      packages:
+        - maxcube
+      setuptools_test:
+        suite: tests
+
+# ext modules as tuples, build-system.build-backend missing
+numpy:
+  1.23.2:
+    logged: 'AttributeError: fcompiler. Did you mean'
+    ext:
+      format: setuptools
+      packages:
+        - numpy
+      setuptools_test:
+        suite: pytest
+      tests:
+        - numpy/tests
+    requires:
+      build_system_requires:
+        - cython<3.0,>=0.29.30
+        - setuptools==59.2.0
+        - wheel==0.37.0
+  1.24.2:
+    ext:
+      format: setuptools
+      packages:
+        - numpy
+      tests:
+        - numpy/tests
+    requires:
+      build_system_requires:
+        - cython<3.0,>=0.29.30
+        - setuptools==59.2.0
+        - wheel==0.37.0
+
+# specifies reqs as str
+passlib:
+  1.7.4:
+    ext:
+      format: setuptools
+      packages:
+        - passlib
+      setuptools_test:
+        suite: nose.collector
+      tests:
+        - passlib/tests
+    keywords:
+      - hash
+      - password
+      - secret
+      - security
+    requires:
+      argon2:
+        - argon2-cffi>=18.2.0
+      bcrypt:
+        - bcrypt>=3.1.0
+      build_docs:
+        - cloud-sptheme>=1.10.1
+        - sphinx>=1.6
+        - sphinxcontrib-fulltoc>=1.2.0
+      test:
+        # specified as str
+        - nose>=1.1
+      totp:
+        - cryptography
+
+# dupe reqs
+pbr:
+  5.11.1:
+    ext:
+      format: setuptools
+      packages:
+        - pbr
+      tests:
+        - pbr/tests
+    requires:
+      test:
+        - coverage!=4.4,>=4.0
+        - fixtures>=3.0.0
+        - hacking<4.0.0,>=1.1.0
+        - mock<4.0.0,>=2.0.0
+        - pre-commit>=2.6.0
+        - six>=1.12.0
+        - sphinx!=1.6.6,!=1.6.7,<2.0.0,>=1.6.2
+        - stestr<3.0,>=2.1.0
+        - testrepository>=0.0.18
+        - testresources>=2.0.0
+        - testscenarios>=0.4
+        - testtools>=2.2.0
+        - virtualenv>=20.0.3
+        - wheel>=0.32.0
+
+# dynamic metadata
+poetry:
+  1.4.2:
+    ext:
+      build_backend: poetry.core.masonry.api
+      tests:
+        - tests
+      packages:
+        - poetry
+    requires:
+      build_system_requires:
+        - poetry-core>=1.1.0
+      run:
+        - build<0.11.0,>=0.10.0
+        - cachecontrol[filecache]<0.13.0,>=0.12.9
+        - cleo<3.0.0,>=2.0.0
+        - crashtest<0.5.0,>=0.4.1
+        - dulwich<0.22.0,>=0.21.2
+        - filelock<4.0.0,>=3.8.0
+        - html5lib<2.0,>=1.0
+        - installer<0.8.0,>=0.7.0
+        - jsonschema<5.0.0,>=4.10.0
+        - keyring<24.0.0,>=23.9.0
+        - lockfile<0.13.0,>=0.12.2
+        - packaging>=20.4
+        - pexpect<5.0.0,>=4.7.0
+        - pkginfo<2.0.0,>=1.9.4
+        - platformdirs<3.0.0,>=2.5.2
+        - poetry-core==1.5.2
+        - poetry-plugin-export<2.0.0,>=1.3.0
+        - pyproject-hooks<2.0.0,>=1.0.0
+        - requests-toolbelt<0.11.0,>=0.9.1
+        - requests<3.0,>=2.18
+        - shellingham<2.0,>=1.5
+        - tomlkit!=0.11.2,!=0.11.3,<1.0.0,>=0.11.1
+        - trove-classifiers>=2022.5.19
+        - urllib3<2.0.0,>=1.26.0
+        - virtualenv!=20.4.5,!=20.4.6,<21.0.0,>=20.4.3
+  1.6.1:
+    ext:
+      build_backend: poetry.core.masonry.api
+      tests:
+        - tests
+      packages:
+        - poetry
+    requires:
+      build_system_requires:
+        - poetry-core>=1.5.0
+      run:
+        - build<0.11.0,>=0.10.0
+        - cachecontrol[filecache]<0.14.0,>=0.13.0
+        - cleo<3.0.0,>=2.0.0
+        - crashtest<0.5.0,>=0.4.1
+        - dulwich<0.22.0,>=0.21.2
+        - installer<0.8.0,>=0.7.0
+        - jsonschema<4.18.0,>=4.10.0
+        - keyring<25.0.0,>=24.0.0
+        - packaging>=20.4
+        - pexpect<5.0.0,>=4.7.0
+        - pkginfo<2.0.0,>=1.9.4
+        - platformdirs<4.0.0,>=3.0.0
+        - poetry-core==1.7.0
+        - poetry-plugin-export<2.0.0,>=1.5.0
+        - pyproject-hooks<2.0.0,>=1.0.0
+        - requests-toolbelt<2,>=0.9.1
+        - requests<3.0,>=2.26
+        - shellingham<2.0,>=1.5
+        - tomlkit<1.0.0,>=0.11.4
+        - trove-classifiers>=2022.5.19
+        - virtualenv<21.0.0,>=20.22.0
+
+# wheel
+poetry_core:
+  1.5.2:
+    archive:
+      python: py3
+      abi: none
+      platform: any
+    ext:
+      packages:
+        - poetry.core
+
+# build-backend == "setuptools.build_meta", no setup.py
+pytest-asyncio:
+  0.21.0:
+    ext:
+      packages:
+        - pytest_asyncio
+      tests:
+        - tests
+    requires:
+      build_system_requires:
+        - setuptools-scm[toml]>=6.2
+        - setuptools>=51.0
+        - wheel>=0.36
+      docs:
+        - sphinx-rtd-theme>=1.0
+        - sphinx>=5.3
+      run:
+        - pytest>=7.0.0
+      testing:
+        - coverage>=6.2
+        - flaky>=3.5.0
+        - hypothesis>=5.7.1
+        - mypy>=0.931
+        - pytest-trio>=0.7.0
+
+# PathMetadata with modules set
+setupmeta:
+  3.4.0:
+    ext:
+      format: setuptools
+      packages:
+        - setupmeta
+      tests:
+        - tests
+
+# private package
+setuptools:
+  67.6.0:
+    ext:
+      format: pyproject
+      packages:
+        - pkg_resources
+        - setuptools
+      tests:
+        - setuptools/tests
+    requires:
+      docs:
+        - furo
+        - jaraco-packaging>=9
+        - jaraco-tidelift>=1.4
+        - pygments-github-lexers==0.0.5
+        - rst-linker>=1.9
+        - sphinx-favicon
+        - sphinx-hoverxref<2
+        - sphinx-inline-tabs
+        - sphinx-lint
+        - sphinx-notfound-page==0.8.3
+        - sphinx-reredirects
+        - sphinx>=3.5
+        - sphinxcontrib-towncrier
+      testing:
+        - build[virtualenv]
+        - filelock>=3.4.0
+        - flake8-2020
+        - flake8<5
+        - ini2toml[lite]>=0.9
+        - jaraco-envs>=2.2
+        - jaraco-path>=3.2.0
+        - pip-run>=8.8
+        - pip>=19.1
+        - pytest-black>=0.3.7
+        - pytest-checkdocs>=2.4
+        - pytest-cov
+        - pytest-enabler>=1.3
+        - pytest-flake8
+        - pytest-mypy>=0.9.1
+        - pytest-perf
+        - pytest-timeout
+        - pytest-xdist
+        - pytest>=6
+        - tomli-w>=1.0.0
+        - virtualenv>=13.0.0
+        - wheel
+      testing_integration:
+        - build[virtualenv]
+        - filelock>=3.4.0
+        - jaraco-envs>=2.2
+        - jaraco-path>=3.2.0
+        - pytest
+        - pytest-enabler
+        - pytest-xdist
+        - tomli
+        - virtualenv>=13.0.0
+        - wheel
+
+setuptools_scm_git_archive:
+  1.4.1:
+    ext:
+      entrypoints:
+        setuptools_scm.parse_scm:
+          .git_archival.txt: setuptools_scm_git_archive:parse
+        setuptools_scm.parse_scm_fallback:
+          .git_archival.txt: setuptools_scm_git_archive:parse
+      format: setuptools
+      packages:
+      - setuptools_scm_git_archive
+      tests:
+      - tests.py
+    requires:
+      build_system_requires:
+      - setuptools-scm<8
+
+# cargo in ignored dirs
+setuptools-rust:
+  1.5.2:
+    ext:
+      packages:
+        - setuptools_rust
+      tests:
+        - tests
+    requires:
+      build_system_requires:
+        - setuptools>=62.4
+      run:
+        - semantic-version<3,>=2.8.2
+        - setuptools>=62.4
+        - typing-extensions>=3.7.4.3
+
+# setup.py raises SystemExit
+tables:
+  3.7.0:
+    ext:
+      packages:
+        - tables
+      tests:
+        - tables/tests
+    requires:
+      build_system_requires:
+        - cython>=0.29.21
+        - oldest-supported-numpy
+        - packaging
+        - setuptools>=42.0
+      doc:
+        - ipython
+        - numpydoc
+        - sphinx-rtd-theme
+        - sphinx>=1.1
+      run:
+        - numexpr>=2.6.2
+        - numpy>=1.19.0
+        - packaging
+
+# has py module
+tokenize_rt:
+  5.0.0:
+    ext:
+      format: setuptools
+      modules:
+        - tokenize_rt
+
+yamlfix:
+  1.14.0:
+    ext:
+      format: pyproject
+      packages:
+        - yamlfix
+      tests:
+        - tests
+    requires:
+      build_system_requires:
+        - pdm-pep517
+      run:
+        - click>=8.1.3
+        - maison>=1.4.0
+        - ruyaml>=0.91.0
+
+# uses old-skool "requires"
+yarg:
+  0.1.9:
+    ext:
+      format: setuptools
+      packages:
+        - yarg
+      tests:
+        - tests
+    requires:
+      run:
+        - requests

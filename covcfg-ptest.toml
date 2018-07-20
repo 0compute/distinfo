@@ -1,0 +1,16 @@
+[html]
+title = "Package Test Coverage Report"
+
+[report]
+exclude_lines = [
+    "pragma: no ptest cover",
+    "pragma: no ftest ptest cover",
+]
+omit = [
+    "distinfo/__main__.py",
+    "distinfo/cli.py",
+    "distinfo/util.py",
+    "tests/acceptance/test_cli.py",
+    "tests/functional/*",
+    "tests/unit/*",
+]

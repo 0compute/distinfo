@@ -1,0 +1,39 @@
+name: Distinfo
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/cache@v3
+        with:
+          path: /var/tmp/distinfo-test-packages
+          key: distinfo-test-packages
+      - uses: cachix/install-nix-action@v22
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+      - uses: DeterminateSystems/magic-nix-cache-action@v2
+      - uses: cachix/cachix-action@v12
+        with:
+          name: distinfo
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+      - uses: HatsuneMiku3939/direnv-action@v1
+      - run: ruff check .
+      - run: make test
+        env:
+          ARGS: -vv
+          COV_REPORT: xml
+      - uses: codacy/codacy-coverage-reporter-action@v1.3.0
+        with:
+          api-token: ${{ secrets.CODACY_API_TOKEN }}
+          coverage-reports: coverage.xml

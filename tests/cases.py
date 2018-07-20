@@ -1,19 +1,9 @@
-from distinfo import const
+from __future__ import annotations
 
-SETUP = """
-from setuptools import setup
-setup()
-"""
+from distinfo.base import Base
 
 
-class Case:
-
-    DIST = "test.dist"
-
-    def _raiser(self, exc=Exception):
-        def _raiser(*_args, **_kwargs):
-            raise exc()
-        return _raiser
-
-    def _write_setup(self, tmpdir, setup=SETUP):
-        tmpdir.join(const.SETUP_PY).write(setup)
+class Case(Base):
+    def __str__(self) -> str:  # pragma: no cover
+        # required for __repr__, needed for debugging tests
+        return "test case"

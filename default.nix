@@ -3,16 +3,16 @@
     url = "https://github.com/nixos/nixpkgs/archive/a8c71037e041725d40fbf2f3047347b6833b1703.tar.gz";
     sha256 = "1z4cchcw7qgjhy0x6mnz7iqvpswc2nfjpdynxc54zpm66khfrjqw";
   }) {}
-, python ? pkgs.python3
-, lib ? pkgs.lib
 }:
+with pkgs.lib;
 let
+  python = pkgs.python3;
   nix-gitignore = import (pkgs.fetchFromGitHub {
     owner = "siers";
     repo = "nix-gitignore";
     rev = "6dd9ece00991003c0f5d3b4da3f29e67956d266e";
     sha256 = "0jn5yryf511shdp8g9pwrsxgk57p6xhpb79dbi2sf5hzlqm2csy4";
-  }) { inherit lib; };
+  }) { inherit (pkgs) lib; };
 in
 with rec {
 
@@ -37,13 +37,13 @@ with rec {
       inherit pname version;
       sha256 = "37228cda29411948b422fae072f57e31d3396d2ee1c9783775980ee9c9990af6";
     };
-    buildInputs = [ setuptools_scm ];
+    buildInputs = [ setuptools-scm ];
     checkInputs = [ pytest ];
-    checkPhase = "py.test";
+    checkPhase = "pytest";
     meta = {
       description = "apipkg: namespace control and lazy-import mechanism";
       homepage = https://github.com/pytest-dev/apipkg;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -54,26 +54,28 @@ with rec {
       inherit pname version;
       sha256 = "9e5896d1372858f8dd3344faf4e5014d21849c756c8d5701f78f8a103b372d92";
     };
+    checkInputs = [ unittest2 ];
+    checkPhase = "${python.interpreter} -m unittest discover";
     meta = {
       description = "A small Python module for determining appropriate platform-specific dirs, e.g. a \"user data dir\".";
       homepage = http://github.com/ActiveState/appdirs;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
   astroid = python.pkgs.buildPythonPackage rec {
     pname = "astroid";
-    version = "2.0.1";
+    version = "2.0.2";
     src = python.pkgs.fetchPypi {
       inherit pname version;
-      sha256 = "218e36cf8d98a42f16214e8670819ce307fa707d1dcf7f9af84c7aede1febc7f";
+      sha256 = "a48b57ede295c3188ef5c84273bc2a8eadc46e4cbb001eae0d49fb5d1fabbb19";
     };
     buildInputs = [ pytest-runner ];
     propagatedBuildInputs = [ lazy-object-proxy six typed-ast wrapt ];
     meta = {
-      description = "A abstract syntax tree for Python with inference support.";
+      description = "An abstract syntax tree for Python with inference support.";
       homepage = https://github.com/PyCQA/astroid;
-      license = lib.licenses.lgpl3;
+      license = licenses.lgpl3;
     };
   };
 
@@ -84,10 +86,12 @@ with rec {
       inherit pname version;
       sha256 = "240831ea22da9ab882b551b31d4225591e5e447a68c5e188db5b89ca1d487585";
     };
+    patchPhase = "find . -type d -name __pycache__ -depth -exec rm -rf {} ';'";
+    doCheck = false;
     meta = {
       description = "Atomic file writes.";
       homepage = https://github.com/untitaker/python-atomicwrites;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -102,11 +106,11 @@ with rec {
     meta = {
       description = "Classes Without Boilerplate";
       homepage = http://www.attrs.org/;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
-  Babel = python.pkgs.buildPythonPackage rec {
+  babel = python.pkgs.buildPythonPackage rec {
     pname = "Babel";
     version = "2.6.0";
     src = python.pkgs.fetchPypi {
@@ -119,7 +123,7 @@ with rec {
     meta = {
       description = "Internationalization utilities";
       homepage = http://babel.pocoo.org/;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
@@ -135,7 +139,7 @@ with rec {
     meta = {
       description = "Fast, simple object-to-object and broadcast signaling";
       homepage = http://pythonhosted.org/blinker/;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -153,7 +157,7 @@ with rec {
     meta = {
       description = "Python binding to the Brotli library";
       homepage = https://github.com/python-hyper/brotlipy/;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -184,7 +188,7 @@ with rec {
     meta = {
       description = "Python package for providing Mozilla's CA Bundle.";
       homepage = http://certifi.io/;
-      license = lib.licenses.mpl20;
+      license = licenses.mpl20;
     };
   };
 
@@ -202,7 +206,7 @@ with rec {
     meta = {
       description = "Foreign Function Interface for Python calling C code.";
       homepage = http://cffi.readthedocs.org;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -214,11 +218,12 @@ with rec {
       sha256 = "84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae";
     };
     checkInputs = [ hypothesis pytest ];
+    patchPhase = "find . -type d -name __pycache__ -depth -exec rm -rf {} ';'";
     checkPhase = "pytest";
     meta = {
       description = "Universal encoding detector for Python 2 and 3";
       homepage = https://github.com/chardet/chardet;
-      license = lib.licenses.lgpl3;
+      license = licenses.lgpl3;
     };
   };
 
@@ -251,7 +256,7 @@ with rec {
     meta = {
       description = "Cross-platform colored terminal text.";
       homepage = https://github.com/tartley/colorama;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
@@ -264,11 +269,11 @@ with rec {
     };
     propagatedBuildInputs = [ humanfriendly ];
     checkInputs = [ capturer mock pkgs.utillinux pytest-cov verboselogs ];
-    checkPhase = "PATH=$out/bin:$PATH pytest coloredlogs/tests.py";
+    checkPhase = "PATH=$out/bin:$PATH\npytest coloredlogs/tests.py";
     meta = {
       description = "Colored terminal output for Python's logging module";
       homepage = https://coloredlogs.readthedocs.io;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -299,7 +304,7 @@ with rec {
     meta = {
       description = "Code coverage measurement for Python";
       homepage = https://bitbucket.org/ned/coveragepy;
-      license = lib.licenses.asl20;
+      license = licenses.asl20;
     };
   };
 
@@ -313,7 +318,7 @@ with rec {
     meta = {
       description = "Better living through Python with decorators";
       homepage = https://github.com/micheles/decorator;
-      license = lib.licenses.bsd3;
+      license = licenses.bsd3;
     };
   };
 
@@ -329,23 +334,23 @@ with rec {
     meta = {
       description = "Distribution utilities";
       homepage = https://bitbucket.org/pypa/distlib;
-      license = lib.licenses.psfl;
+      license = licenses.psfl;
     };
   };
 
-  Django = python.pkgs.buildPythonPackage rec {
+  django = python.pkgs.buildPythonPackage rec {
     pname = "Django";
-    version = "2.0.7";
+    version = "2.1";
     src = python.pkgs.fetchPypi {
       inherit pname version;
-      sha256 = "97886b8a13bbc33bfeba2ff133035d3eca014e2309dff2b6da0bdfc0b8656613";
+      sha256 = "7f246078d5a546f63c28fc03ce71f4d7a23677ce42109219c24c9ffb28416137";
     };
     propagatedBuildInputs = [ pytz ];
     doCheck = false;
     meta = {
       description = "A high-level Python Web framework that encourages rapid development and clean, pragmatic design.";
       homepage = https://www.djangoproject.com/;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
@@ -357,13 +362,13 @@ with rec {
       sha256 = "40f563e1f7a7b80dc5a4e76ad75c23da53d62f1e15e6e517293b04e1f84ead7c";
       extension = "zip";
     };
-    checkInputs = [ pytest ];
-    checkPhase = "pytest";
-    PYTEST_ADDOPTS = "-k 'not test_zone'";
+    checkInputs = [ unittest2 ];
+    patchPhase = "rm tests/test_zone.py";
+    checkPhase = "${python.interpreter} -m unittest discover";
     meta = {
       description = "DNS toolkit";
       homepage = http://www.dnspython.org;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
@@ -378,7 +383,7 @@ with rec {
     meta = {
       description = "Pythonic argument parser, that will make you smile";
       homepage = http://docopt.org;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -408,11 +413,11 @@ with rec {
     meta = {
       description = "Dodgy: Searches for dodgy looking lines in Python code";
       homepage = https://github.com/landscapeio/dodgy;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
-  email_validator = python.pkgs.buildPythonPackage rec {
+  email-validator = python.pkgs.buildPythonPackage rec {
     pname = "email_validator";
     version = "1.0.2";
     src = python.pkgs.fetchPypi {
@@ -435,35 +440,35 @@ with rec {
       inherit pname version;
       sha256 = "a7a84d5fa07a089186a329528f127c9d73b9de57f1a1131b82bb5320ee651f6a";
     };
-    buildInputs = [ setuptools_scm ];
+    buildInputs = [ setuptools-scm ];
     propagatedBuildInputs = [ apipkg ];
     checkInputs = [ pytest-timeout ];
-    checkPhase = "py.test testing";
+    checkPhase = "pytest testing";
     PYTEST_ADDOPTS = "-k 'not test_close_initiating_remote_no_error'";
     meta = {
       description = "execnet: rapid multi-Python deployment";
       homepage = http://codespeak.net/execnet;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
-  factory_boy = python.pkgs.buildPythonPackage rec {
+  factory-boy = python.pkgs.buildPythonPackage rec {
     pname = "factory_boy";
     version = "2.11.1";
     src = python.pkgs.fetchPypi {
       inherit pname version;
       sha256 = "6f25cc4761ac109efd503f096e2ad99421b1159f01a29dbb917359dcd68e08ca";
     };
-    propagatedBuildInputs = [ Faker ];
+    propagatedBuildInputs = [ faker ];
     doCheck = false;
     meta = {
       description = "A versatile test fixtures replacement based on thoughtbot's factory_bot for Ruby.";
       homepage = https://github.com/FactoryBoy/factory_boy;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
-  Faker = python.pkgs.buildPythonPackage rec {
+  faker = python.pkgs.buildPythonPackage rec {
     pname = "Faker";
     version = "0.8.17";
     src = python.pkgs.fetchPypi {
@@ -471,12 +476,12 @@ with rec {
       sha256 = "0e9a1227a3a0f3297a485715e72ee6eb77081b17b629367042b586e38c03c867";
     };
     propagatedBuildInputs = [ python-dateutil text-unidecode ];
-    checkInputs = [ email_validator mock UkPostcodeParser ];
-    checkPhase = "pytest";
+    checkInputs = [ email-validator mock ukpostcodeparser ];
+    patchPhase = "find . -type d -name __pycache__ -depth -exec rm -rf {} ';'";
     meta = {
       description = "Faker is a Python package that generates fake data for you.";
       homepage = https://github.com/joke2k/faker;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -487,13 +492,13 @@ with rec {
       inherit pname version;
       sha256 = "d2522f1f3512371f295379c4c0d1962de06762eb586c199620a2a5d423539b12";
     };
-    buildInputs = [ setuptools_scm ];
+    buildInputs = [ setuptools-scm ];
     checkInputs = [ pytest ];
-    checkPhase = "py.test -v -rs";
+    checkPhase = "pytest -v -rs";
     meta = {
       description = "colorful TAB completion for Python prompt";
       homepage = http://bitbucket.org/antocuni/fancycompleter;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
@@ -508,7 +513,7 @@ with rec {
     meta = {
       description = "Return the first true value of an iterable.";
       homepage = http://github.com/hynek/first/;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -521,16 +526,13 @@ with rec {
     };
     buildInputs = [ pytest-runner ];
     propagatedBuildInputs = [ mccabe pycodestyle pyflakes ];
-    checkInputs = [ coverage mock ];
-    checkPhase = ''
-      coverage run --parallel-mode -m pytest
-      coverage combine
-      coverage report -m
-    '';
+    checkInputs = [ mock ];
+    patchPhase = "find . -type d -name __pycache__ -depth -exec rm -rf {} ';'";
+    checkPhase = "pytest";
     meta = {
       description = "the modular source code checker: pep8, pyflakes and co";
       homepage = https://gitlab.com/pycqa/flake8;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -543,15 +545,16 @@ with rec {
     };
     propagatedBuildInputs = [ flake8 ];
     checkInputs = [ mock pep8 pytest ];
+    patchPhase = "find . -type d -name __pycache__ -depth -exec rm -rf {} ';'";
     checkPhase = "pytest";
     meta = {
       description = "Polyfill package for Flake8 plugins";
       homepage = https://gitlab.com/pycqa/flake8-polyfill;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
-  Flask = python.pkgs.buildPythonPackage rec {
+  flask = python.pkgs.buildPythonPackage rec {
     pname = "Flask";
     version = "1.0.2";
     src = python.pkgs.fetchPypi {
@@ -559,14 +562,14 @@ with rec {
       sha256 = "2271c0070dbcb5275fad4a82e29f23ab92682dc45f9dfbc22c02ba9b9322ce48";
     };
     buildInputs = [ pkgs.glibcLocales ];
-    propagatedBuildInputs = [ click itsdangerous Jinja2 Werkzeug ];
-    checkInputs = [ blinker greenlet pytest ];
+    propagatedBuildInputs = [ click itsdangerous jinja2 werkzeug ];
+    checkInputs = [ blinker coverage greenlet pytest python-dotenv ];
     checkPhase = "pytest";
     LANG = "en_US.UTF-8";
     meta = {
       description = "A simple framework for building complex web applications.";
       homepage = https://www.palletsprojects.com/p/flask/;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
@@ -577,13 +580,13 @@ with rec {
       inherit pname version;
       sha256 = "703caac155dcaad61f78de4cb0666dca778d854dfb90b3699930adee0559a622";
     };
-    propagatedBuildInputs = [ python-dateutil ];
-    checkInputs = [ mock nose ];
+    propagatedBuildInputs = [ mock python-dateutil ];
+    checkInputs = [ nose ];
     checkPhase = "nosetests";
     meta = {
       description = "Let your Python tests travel through time";
       homepage = https://github.com/spulec/freezegun;
-      license = lib.licenses.asl20;
+      license = licenses.asl20;
     };
   };
 
@@ -599,7 +602,7 @@ with rec {
     meta = {
       description = "A passive Python syntax checker";
       homepage = https://github.com/timothycrosley/frosted;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -616,7 +619,7 @@ with rec {
     meta = {
       description = "Lightweight in-process concurrent programming";
       homepage = https://github.com/python-greenlet/greenlet;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -631,7 +634,7 @@ with rec {
     meta = {
       description = "HTTP Request and Response Service";
       homepage = https://github.com/requests/httpbin;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -646,23 +649,23 @@ with rec {
     meta = {
       description = "Human friendly output for text interfaces using Python";
       homepage = https://humanfriendly.readthedocs.io;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
   hypothesis = python.pkgs.buildPythonPackage rec {
     pname = "hypothesis";
-    version = "3.66.9";
+    version = "3.66.22";
     src = python.pkgs.fetchPypi {
       inherit pname version;
-      sha256 = "ebf771edbeaeea9fa4162556925f13cfcc41a2358adf73e69ee663197eb6ad99";
+      sha256 = "fbeed752678ef4b2069fa0cd8d087f0f32aff8c5da37bfa0e11a27e3971428c3";
     };
     propagatedBuildInputs = [ attrs coverage ];
     doCheck = false;
     meta = {
       description = "A library for property based testing";
       homepage = https://github.com/HypothesisWorks/hypothesis/tree/master/hypothesis-python;
-      license = lib.licenses.mpl20;
+      license = licenses.mpl20;
     };
   };
 
@@ -676,7 +679,7 @@ with rec {
     meta = {
       description = "Internationalized Domain Names in Applications (IDNA)";
       homepage = https://github.com/kjd/idna;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
@@ -687,10 +690,11 @@ with rec {
       inherit pname version;
       sha256 = "5b326e4678b6925158ccc66a9fa3122b6106d7c876ee32d7de6ce59385b96315";
     };
+    patchPhase = "find . -type d -name __pycache__ -depth -exec rm -rf {} ';'";
     meta = {
       description = "Getting image size from png/jpeg/jpeg2000/gif file";
       homepage = https://github.com/shibukawa/imagesize_py;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -702,11 +706,11 @@ with rec {
       sha256 = "49c4b20e1f38aa5cf109ddcd39647ac419f928512c869dc01d5c7098eddede82";
     };
     checkInputs = [ pytest ];
-    checkPhase = "py.test --verbose iso8601";
+    checkPhase = "pytest --verbose iso8601";
     meta = {
       description = "Simple module to parse ISO 8601 dates";
       homepage = https://bitbucket.org/micktwomey/pyiso8601;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -722,7 +726,7 @@ with rec {
     meta = {
       description = "A Python utility / library to sort Python imports.";
       homepage = https://github.com/timothycrosley/isort;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -748,29 +752,28 @@ with rec {
       sha256 = "b409ed0f6913a701ed474a614a3bb46e6953639033e31f769ca7581da5bd1ec1";
     };
     propagatedBuildInputs = [ parso ];
-    checkInputs = [ colorama numpydoc pytest-cache ];
-    checkPhase = "py.test jedi test";
+    checkInputs = [ colorama docopt numpydoc pytest-cache ];
+    checkPhase = "pytest jedi test";
     meta = {
       description = "An autocompletion tool for Python that can be used for text editors.";
       homepage = https://github.com/davidhalter/jedi;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
-  Jinja2 = python.pkgs.buildPythonPackage rec {
+  jinja2 = python.pkgs.buildPythonPackage rec {
     pname = "Jinja2";
     version = "2.10";
     src = python.pkgs.fetchPypi {
       inherit pname version;
       sha256 = "f84be1bb0040caca4cea721fcbbbbd61f9be9464ca236387158b0feea01914a4";
     };
-    propagatedBuildInputs = [ MarkupSafe ];
-    checkInputs = [ pytest ];
-    checkPhase = "pytest";
+    propagatedBuildInputs = [ markupsafe ];
+    doCheck = false;
     meta = {
       description = "A small but fast and easy to use stand-alone template engine written in pure python.";
       homepage = http://jinja.pocoo.org/;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
@@ -781,19 +784,13 @@ with rec {
       inherit pname version;
       sha256 = "eb91be369f945f10d3a49f5f9be8b3d0b93a4c2be8f8a5b83b0571b8123e0a7a";
     };
-    checkInputs = [
-      Django
-      objproxies
-      pytest-benchmark
-      pytest-capturelog
-      pytest-cov
-    ];
-    checkPhase = "py.test --cov --cov-report=term-missing -vv";
+    checkInputs = [ django objproxies pytest-benchmark ];
+    checkPhase = "pytest -vv --ignore=src";
     setupPyBuildFlags = [ "--inplace" "--parallel $NIX_BUILD_CORES" ];
     meta = {
       description = "A fast and thorough lazy object proxy.";
       homepage = https://github.com/ionelmc/python-lazy-object-proxy;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
@@ -812,7 +809,7 @@ with rec {
     };
   };
 
-  MarkupSafe = python.pkgs.buildPythonPackage rec {
+  markupsafe = python.pkgs.buildPythonPackage rec {
     pname = "MarkupSafe";
     version = "1.0";
     src = python.pkgs.fetchPypi {
@@ -822,7 +819,7 @@ with rec {
     meta = {
       description = "Implements a XML/HTML/XHTML Markup safe string for Python";
       homepage = http://github.com/pallets/markupsafe;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
@@ -837,7 +834,7 @@ with rec {
     meta = {
       description = "McCabe checker, plugin for flake8";
       homepage = https://github.com/pycqa/mccabe;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -850,7 +847,7 @@ with rec {
     };
     propagatedBuildInputs = [ pbr six ];
     checkInputs = [ unittest2 ];
-    checkPhase = "unit2 discover";
+    checkPhase = "${python.interpreter} -m unittest discover";
     meta = {
       description = "Rolling backport of unittest.mock for all Pythons";
       homepage = https://github.com/testing-cabal/mock;
@@ -859,17 +856,17 @@ with rec {
 
   more-itertools = python.pkgs.buildPythonPackage rec {
     pname = "more-itertools";
-    version = "4.2.0";
+    version = "4.3.0";
     src = python.pkgs.fetchPypi {
       inherit pname version;
-      sha256 = "2b6b9893337bfd9166bee6a62c2b0c9fe7735dcf85948b387ec8cba30e85d8e8";
+      sha256 = "c476b5d3a34e12d40130bc2f935028b5f636df8f372dc2c1c01dc19681b2039e";
     };
     propagatedBuildInputs = [ six ];
-    checkPhase = "${python.interpreter} -m unittest discover -v";
+    checkPhase = "${python.interpreter} -m unittest discover";
     meta = {
       description = "More routines for operating on iterables, beyond itertools";
       homepage = https://github.com/erikrose/more-itertools;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -885,7 +882,7 @@ with rec {
     meta = {
       description = "A dot-accessible dictionary (a la JavaScript objects).";
       homepage = http://github.com/Infinidat/munch;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -901,7 +898,7 @@ with rec {
     meta = {
       description = "Optional static typing for Python";
       homepage = http://www.mypy-lang.org/;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -916,7 +913,7 @@ with rec {
     meta = {
       description = "nose extends unittest to make testing easier";
       homepage = http://readthedocs.org/docs/nose/;
-      license = lib.licenses.lgpl3;
+      license = licenses.lgpl3;
     };
   };
 
@@ -948,12 +945,13 @@ with rec {
       inherit pname version;
       sha256 = "61f4bf030937b60daa3262e421775838c945dcdd671f37b69e8e4854c7eb5ffd";
     };
-    propagatedBuildInputs = [ nose Sphinx ];
+    propagatedBuildInputs = [ sphinx ];
+    checkInputs = [ nose ];
     checkPhase = "nosetests";
     meta = {
       description = "Sphinx extension to support docstrings in Numpy format";
       homepage = https://numpydoc.readthedocs.io;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
@@ -980,11 +978,8 @@ with rec {
       sha256 = "f019b770dd64e585a99714f1fd5e01c7a8f11b45635aa953fd41c689a657375b";
     };
     propagatedBuildInputs = [ pyparsing six ];
-    checkInputs = [ coverage pretend pytest ];
-    checkPhase = ''
-      ${python.interpreter} -m coverage run --source packaging/ -m pytest --strict
-      ${python.interpreter} -m coverage report -m --fail-under 100
-    '';
+    checkInputs = [ pretend pytest ];
+    checkPhase = "pytest --strict";
     meta = {
       description = "Core utilities for Python packages";
       homepage = https://github.com/pypa/packaging;
@@ -1004,7 +999,7 @@ with rec {
     meta = {
       description = "A Python Parser";
       homepage = https://github.com/davidhalter/parso;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -1029,13 +1024,13 @@ with rec {
       inherit pname version;
       sha256 = "dde77326e4ea41439c243ed065826d53539530eeabd1b6615aae15cfbb9fda05";
     };
-    buildInputs = [ setuptools_scm ];
-    propagatedBuildInputs = [ fancycompleter Pygments wmctrl ];
+    buildInputs = [ setuptools-scm ];
+    propagatedBuildInputs = [ fancycompleter pygments wmctrl ];
     doCheck = false;
     meta = {
       description = "pdb++, a drop-in replacement for pdb";
       homepage = http://github.com/antocuni/pdb;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
@@ -1052,7 +1047,7 @@ with rec {
     meta = {
       description = "Python style guide checker";
       homepage = http://pep8.readthedocs.org/;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -1064,27 +1059,10 @@ with rec {
       sha256 = "624258e0dd06ef32a9daf3c36cc925ff7314da7233209c5b01f7e5cdd3c34826";
     };
     propagatedBuildInputs = [ flake8-polyfill ];
-    doCheck = false;
     meta = {
       description = "Check PEP-8 naming conventions, plugin for flake8";
       homepage = https://github.com/PyCQA/pep8-naming;
-      license = lib.licenses.mit;
-    };
-  };
-
-  pexpect = python.pkgs.buildPythonPackage rec {
-    pname = "pexpect";
-    version = "4.6.0";
-    src = python.pkgs.fetchPypi {
-      inherit pname version;
-      sha256 = "2a8e88259839571d1251d278476f3eec5db26deb73a70be5ed5dc5435e418aba";
-    };
-    propagatedBuildInputs = [ ptyprocess ];
-    doCheck = false;
-    meta = {
-      description = "Pexpect allows easy control of interactive console applications.";
-      homepage = https://pexpect.readthedocs.io/;
-      license = "ISC license";
+      license = licenses.mit;
     };
   };
 
@@ -1099,7 +1077,23 @@ with rec {
     meta = {
       description = "The simplest way to write one program that runs on both Python 2 and Python 3.";
       homepage = https://github.com/timothycrosley/pies;
-      license = lib.licenses.mit;
+      license = licenses.mit;
+    };
+  };
+
+  pip = python.pkgs.buildPythonPackage rec {
+    pname = "pip";
+    version = "18.0";
+    src = python.pkgs.fetchPypi {
+      inherit pname version;
+      sha256 = "a0e11645ee37c90b40c46d607070c4fd583e2cd46231b1c06e389c5e814eed76";
+    };
+    doCheck = false;
+    installFlags = [ "--ignore-installed" ];
+    meta = {
+      description = "The PyPA recommended tool for installing Python packages.";
+      homepage = https://pip.pypa.io/;
+      license = licenses.mit;
     };
   };
 
@@ -1121,16 +1115,17 @@ with rec {
 
   pluggy = python.pkgs.buildPythonPackage rec {
     pname = "pluggy";
-    version = "0.6.0";
+    version = "0.7.1";
     src = python.pkgs.fetchPypi {
       inherit pname version;
-      sha256 = "7f8ae7f5bdf75671a718d2daf0a64b7885f74510bcd98b1a0bb420eb9a9d0cff";
+      sha256 = "95eb8364a4708392bae89035f45341871286a333f749c3141c20573d2b3876e1";
     };
+    buildInputs = [ setuptools-scm ];
     doCheck = false;
     meta = {
       description = "plugin and hook calling mechanisms for python";
       homepage = https://github.com/pytest-dev/pluggy;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -1145,11 +1140,11 @@ with rec {
     meta = {
       description = "A library for stubbing in Python";
       homepage = https://github.com/alex/pretend;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
-  prompt_toolkit = python.pkgs.buildPythonPackage rec {
+  prompt-toolkit = python.pkgs.buildPythonPackage rec {
     pname = "prompt_toolkit";
     version = "1.0.15";
     src = python.pkgs.fetchPypi {
@@ -1157,12 +1152,9 @@ with rec {
       sha256 = "858588f1983ca497f1cf4ffde01d978a3ea02b01c8a26a8bbc5cd2e66d816917";
     };
     propagatedBuildInputs = [ six wcwidth ];
-    checkInputs = [ pytest-xdist ];
+    checkInputs = [ pytest ];
     patchPhase = "rm prompt_toolkit/win32_types.py";
-    checkPhase = ''
-      PYTEST_ADDOPTS="$PYTEST_ADDOPTS -n$NIX_BUILD_CORES"
-      pytest
-    '';
+    checkPhase = "pytest";
     PYTEST_ADDOPTS = "-k 'not test_pathcompleter_can_expanduser'";
     meta = {
       description = "Library for building powerful interactive command lines in Python";
@@ -1183,16 +1175,16 @@ with rec {
     meta = {
       description = "Useful property variants for Python programming (required properties, writable properties, cached properties, etc)";
       homepage = https://property-manager.readthedocs.org;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
   prospector = python.pkgs.buildPythonPackage rec {
     pname = "prospector";
-    version = "1.0";
+    version = "1.1.1";
     src = python.pkgs.fetchPypi {
       inherit pname version;
-      sha256 = "239e0a5c5aaf6b0ad957016dadce289a7c175dc58b1d70759427ab6b045b6903";
+      sha256 = "e2e62b656cca5610d397d7dfe76288e9284283be1b551e0495dd6a823390db65";
     };
     propagatedBuildInputs = [
       dodgy
@@ -1200,9 +1192,9 @@ with rec {
       mypy
       pep8-naming
       pydocstyle
-      pylint-common
+      pylint-plugin-utils
       pyroma
-      PyYAML
+      pyyaml
       requirements-detector
       setoptconf
       vulture
@@ -1211,7 +1203,7 @@ with rec {
     meta = {
       description = "Prospector: python static analysis tool";
       homepage = http://prospector.readthedocs.io;
-      license = lib.licenses.gpl2;
+      license = licenses.gpl2;
     };
   };
 
@@ -1222,24 +1214,11 @@ with rec {
       inherit pname version;
       sha256 = "a78b27a85c5dbe9d89376e7f3aa70a9d8fa15cb45ee5f73a3cc3963b9b528ac1";
     };
-    propagatedBuildInputs = [ docopt jedi prompt_toolkit Pygments ];
+    propagatedBuildInputs = [ docopt jedi prompt-toolkit pygments ];
     doCheck = false;
     meta = {
       description = "Python REPL build on top of prompt_toolkit";
       homepage = https://github.com/jonathanslenders/ptpython;
-    };
-  };
-
-  ptyprocess = python.pkgs.buildPythonPackage rec {
-    pname = "ptyprocess";
-    version = "0.6.0";
-    src = python.pkgs.fetchPypi {
-      inherit pname version;
-      sha256 = "923f299cc5ad920c68f2bc0bc98b75b9f838b93b599941a6b63ddbc2476394c0";
-    };
-    meta = {
-      description = "Run a subprocess in a pseudo terminal";
-      homepage = https://github.com/pexpect/ptyprocess;
     };
   };
 
@@ -1250,12 +1229,12 @@ with rec {
       inherit pname version;
       sha256 = "3fd59af7435864e1a243790d322d763925431213b6b8529c6ca71081ace3bbf7";
     };
-    buildInputs = [ setuptools_scm ];
+    buildInputs = [ setuptools-scm ];
     doCheck = false;
     meta = {
       description = "library with cross-python path, ini-parsing, io, code, log facilities";
       homepage = http://py.readthedocs.io/;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -1269,22 +1248,7 @@ with rec {
     meta = {
       description = "Get CPU info with pure Python 2 & 3";
       homepage = https://github.com/workhorsy/py-cpuinfo;
-      license = lib.licenses.mit;
-    };
-  };
-
-  pycmd = python.pkgs.buildPythonPackage rec {
-    pname = "pycmd";
-    version = "1.2";
-    src = python.pkgs.fetchPypi {
-      inherit pname version;
-      sha256 = "adc1976c0106919e9338db20102b91009256dcfec924a66928d7297026f72477";
-    };
-    propagatedBuildInputs = [ py ];
-    doCheck = false;
-    meta = {
-      description = "pycmd: tools for managing/searching Python related files.";
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -1298,7 +1262,7 @@ with rec {
     meta = {
       description = "Python style guide checker";
       homepage = https://pycodestyle.readthedocs.io/;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -1309,11 +1273,13 @@ with rec {
       inherit pname version;
       sha256 = "99a8ca03e29851d96616ad0404b4aad7d9ee16f25c9f9708a11faf2810f7b226";
     };
-    checkPhase = "${python.interpreter} tests/all_tests.py";
+    checkInputs = [ pytest ];
+    patchPhase = "find . -type d -name __pycache__ -depth -exec rm -rf {} ';'";
+    checkPhase = "pytest";
     meta = {
       description = "C parser in Python";
       homepage = https://github.com/eliben/pycparser;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
@@ -1329,7 +1295,7 @@ with rec {
     meta = {
       description = "Python docstring style checker";
       homepage = https://github.com/PyCQA/pydocstyle/;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -1343,11 +1309,11 @@ with rec {
     meta = {
       description = "passive checker of Python programs";
       homepage = https://github.com/PyCQA/pyflakes;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
-  Pygments = python.pkgs.buildPythonPackage rec {
+  pygments = python.pkgs.buildPythonPackage rec {
     pname = "Pygments";
     version = "2.2.0";
     src = python.pkgs.fetchPypi {
@@ -1358,45 +1324,24 @@ with rec {
     meta = {
       description = "Pygments is a syntax highlighting package written in Python.";
       homepage = http://pygments.org/;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
   pylint = python.pkgs.buildPythonPackage rec {
     pname = "pylint";
-    version = "2.0.1";
+    version = "2.1.0";
     src = python.pkgs.fetchPypi {
       inherit pname version;
-      sha256 = "2c90a24bee8fae22ac98061c896e61f45c5b73c2e0511a4bf53f99ba56e90434";
+      sha256 = "0edfec21270725c5aa8e8d8d06ef5666f766e0e748ed2f1ab23624727303b935";
     };
     buildInputs = [ pytest-runner ];
     propagatedBuildInputs = [ astroid isort mccabe ];
-    checkInputs = [ pytest-xdist ];
-    checkPhase = ''
-      PYTEST_ADDOPTS="$PYTEST_ADDOPTS -n$NIX_BUILD_CORES"
-      pytest
-    '';
-    PYTEST_ADDOPTS = "-k 'not test_good_comprehension_checks'";
+    doCheck = false;
     meta = {
       description = "python code static checker";
       homepage = https://github.com/PyCQA/pylint;
-      license = lib.licenses.gpl3;
-    };
-  };
-
-  pylint-common = python.pkgs.buildPythonPackage rec {
-    pname = "pylint-common";
-    version = "0.2.5";
-    src = python.pkgs.fetchPypi {
-      inherit pname version;
-      sha256 = "3276b9e4db16f41cee656c78c74cfef3da383e8301e5b3b91146586ae5b53659";
-    };
-    propagatedBuildInputs = [ pylint-plugin-utils ];
-    doCheck = false;
-    meta = {
-      description = "pylint-common is a Pylint plugin to improve Pylint error analysis of the standard Python library";
-      homepage = https://github.com/landscapeio/pylint-common;
-      license = lib.licenses.gpl2;
+      license = licenses.gpl3;
     };
   };
 
@@ -1412,7 +1357,7 @@ with rec {
     meta = {
       description = "Utilities and helpers for writing Pylint plugins";
       homepage = https://github.com/landscapeio/pylint-plugin-utils;
-      license = lib.licenses.gpl2;
+      license = licenses.gpl2;
     };
   };
 
@@ -1427,7 +1372,7 @@ with rec {
     meta = {
       description = "Python parsing module";
       homepage = http://pyparsing.wikispaces.com/;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -1442,11 +1387,11 @@ with rec {
     meta = {
       description = "Test your project's packaging friendliness";
       homepage = https://github.com/regebro/pyroma;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
-  PySocks = python.pkgs.buildPythonPackage rec {
+  pysocks = python.pkgs.buildPythonPackage rec {
     pname = "PySocks";
     version = "1.6.8";
     src = python.pkgs.fetchPypi {
@@ -1457,18 +1402,18 @@ with rec {
     meta = {
       description = "A Python SOCKS client module. See https://github.com/Anorov/PySocks for more information.";
       homepage = https://github.com/Anorov/PySocks;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
   pytest = python.pkgs.buildPythonPackage rec {
     pname = "pytest";
-    version = "3.6.3";
+    version = "3.7.0";
     src = python.pkgs.fetchPypi {
       inherit pname version;
-      sha256 = "0453c8676c2bee6feb0434748b068d5510273a916295fd61d306c4f22fbfd752";
+      sha256 = "8214ab8446104a1d0c17fbd218ec6aac743236c6ffbe23abc038e40213c60b88";
     };
-    buildInputs = [ setuptools_scm ];
+    buildInputs = [ setuptools-scm ];
     propagatedBuildInputs = [ atomicwrites attrs more-itertools pluggy py ];
     checkInputs = [ hypothesis mock nose ];
     patchPhase = "rm testing/test_argcomplete.py";
@@ -1477,7 +1422,7 @@ with rec {
     meta = {
       description = "pytest: simple powerful testing with Python";
       homepage = http://pytest.org;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -1493,7 +1438,7 @@ with rec {
     meta = {
       description = "A ``py.test`` fixture for benchmarking code. It will group the tests into rounds that are calibrated to the chosen timer. See calibration_ and FAQ_.";
       homepage = https://github.com/ionelmc/pytest-benchmark;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
@@ -1512,22 +1457,6 @@ with rec {
     };
   };
 
-  pytest-capturelog = python.pkgs.buildPythonPackage rec {
-    pname = "pytest-capturelog";
-    version = "0.7";
-    src = python.pkgs.fetchPypi {
-      inherit pname version;
-      sha256 = "b6e8d5189b39462109c2188e6b512d6cc7e66d62bb5be65389ed50e96d22000d";
-    };
-    propagatedBuildInputs = [ py ];
-    doCheck = false;
-    meta = {
-      description = "py.test plugin to capture log messages";
-      homepage = http://bitbucket.org/memedough/pytest-capturelog/overview;
-      license = lib.licenses.mit;
-    };
-  };
-
   pytest-cov = python.pkgs.buildPythonPackage rec {
     pname = "pytest-cov";
     version = "2.5.1";
@@ -1540,7 +1469,7 @@ with rec {
     meta = {
       description = "Pytest plugin for measuring coverage.";
       homepage = https://github.com/pytest-dev/pytest-cov;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -1551,31 +1480,30 @@ with rec {
       inherit pname version;
       sha256 = "e4500cd0509ec4a26535f7d4112a8cc0f17d3a41c29ffd4eab479d2a55b30805";
     };
-    buildInputs = [ setuptools_scm ];
+    buildInputs = [ setuptools-scm ];
     propagatedBuildInputs = [ pytest ];
-    checkInputs = [ pycmd ];
-    patchPhase = "py.cleanup -a";
-    checkPhase = "py.test";
+    patchPhase = "find . -type d -name __pycache__ -depth -exec rm -rf {} ';'";
+    checkPhase = "pytest";
     meta = {
       description = "run tests in isolated forked subprocesses";
       homepage = https://github.com/pytest-dev/pytest-forked;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
   pytest-httpbin = python.pkgs.buildPythonPackage rec {
     pname = "pytest-httpbin";
-    version = "0.0.7";
+    version = "0.3.0";
     src = python.pkgs.fetchPypi {
       inherit pname version;
-      sha256 = "03af8a7055c8bbcb68b14d9a14c103c82c97aeb86a8f1b29cd63d83644c2f021";
+      sha256 = "8cd57e27418a7d7d205fcc9802eea246ed06170e3065abfa76c6d9b40553592c";
     };
     propagatedBuildInputs = [ httpbin ];
     doCheck = false;
     meta = {
       description = "Easily test your HTTP library against a local copy of httpbin";
       homepage = https://github.com/kevin1024/pytest-httpbin;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -1586,14 +1514,13 @@ with rec {
       inherit pname version;
       sha256 = "d89a8209d722b8307b5e351496830d5cc5e192336003a485443ae9adeb7dd4c0";
     };
-    buildInputs = [ setuptools_scm ];
+    buildInputs = [ setuptools-scm ];
     propagatedBuildInputs = [ pytest ];
-    checkInputs = [ coverage ];
-    checkPhase = "coverage run --append --source=pytest_mock.py -m pytest test_pytest_mock.py";
+    doCheck = false;
     meta = {
       description = "Thin-wrapper around the mock package for easier use with py.test";
       homepage = https://github.com/pytest-dev/pytest-mock/;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -1605,12 +1532,12 @@ with rec {
       sha256 = "92ec6745d3ebdd690ecb598648748c9601f16f5afacf83ccef2b50d23e6edb7f";
     };
     propagatedBuildInputs = [ pytest ];
-    checkInputs = [ factory_boy numpy ];
+    checkInputs = [ factory-boy numpy ];
     checkPhase = "pytest";
     meta = {
       description = "Pytest plugin to randomly order tests and control random.seed.";
       homepage = https://github.com/adamchainz/pytest-randomly;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
@@ -1621,7 +1548,7 @@ with rec {
       inherit pname version;
       sha256 = "d23f117be39919f00dd91bffeb4f15e031ec797501b717a245e377aee0f577be";
     };
-    buildInputs = [ setuptools_scm ];
+    buildInputs = [ setuptools-scm ];
     propagatedBuildInputs = [ pytest ];
     patchPhase = "sed -i 's/setuptools_scm>=1.15.0/setuptools_scm/' setup.py";
     doCheck = false;
@@ -1643,7 +1570,7 @@ with rec {
     meta = {
       description = "py.test is a plugin for py.test that changes the default look and feel of py.test (e.g. progressbar, show tests that fail instantly).";
       homepage = http://pivotfinland.com/pytest-sugar/;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
@@ -1656,32 +1583,30 @@ with rec {
     };
     buildInputs = [ pkgs.glibcLocales ];
     propagatedBuildInputs = [ pytest ];
-    checkInputs = [ pexpect ];
-    checkPhase = "py.test";
     LANG = "en_US.UTF-8";
+    doCheck = false;
     meta = {
       description = "py.test plugin to abort hanging tests";
       homepage = http://bitbucket.org/pytest-dev/pytest-timeout/;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
   pytest-xdist = python.pkgs.buildPythonPackage rec {
     pname = "pytest-xdist";
-    version = "1.22.3";
+    version = "1.22.5";
     src = python.pkgs.fetchPypi {
       inherit pname version;
-      sha256 = "48868d1f461122ac8c5fb60487b6da03c0d73dcb06a9d79e06c4eab8ef62a5c3";
+      sha256 = "3308c4f6221670432d01e0b393b333d77c1fd805532e1d64450e8140855eb51b";
     };
-    buildInputs = [ setuptools_scm ];
+    buildInputs = [ setuptools-scm ];
     propagatedBuildInputs = [ execnet pytest-forked ];
-    checkInputs = [ pycmd ];
-    checkPhase = "py.cleanup -aq\npytest";
+    checkPhase = "pytest";
     PYTEST_ADDOPTS = "-k 'not test_distribution_rsyncdirs_example and not test_init_rsync_roots and not test_looponfail_removed_test and not test_popen_rsync_subdir and not test_rsync_popen_with_path and not test_rsyncignore'";
     meta = {
       description = "pytest xdist plugin for distributed testing and loop-on-failing modes";
       homepage = https://github.com/pytest-dev/pytest-xdist;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -1692,13 +1617,27 @@ with rec {
       inherit pname version;
       sha256 = "e27001de32f627c22380a688bcc43ce83504a7bc5da472209b4c70f02829f0b8";
     };
-    buildInputs = [ setuptools_scm ];
+    buildInputs = [ setuptools-scm ];
     propagatedBuildInputs = [ six ];
     doCheck = false;
     meta = {
       description = "Extensions to the standard Python datetime module";
       homepage = https://dateutil.readthedocs.io;
       license = "Dual License";
+    };
+  };
+
+  python-dotenv = python.pkgs.buildPythonPackage rec {
+    pname = "python-dotenv";
+    version = "0.9.0";
+    src = python.pkgs.fetchPypi {
+      inherit pname version;
+      sha256 = "38f22d75f1180256e60c8b06aa06f5254479c1bf5947430c97e3d737d90e8731";
+    };
+    doCheck = false;
+    meta = {
+      description = "Add .env support to your django/flask apps in development and deployments";
+      homepage = http://github.com/theskumar/python-dotenv;
     };
   };
 
@@ -1714,7 +1653,7 @@ with rec {
     meta = {
       description = "A parser for TOML-0.4.0";
       homepage = https://github.com/avakar/pytoml;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -1725,15 +1664,16 @@ with rec {
       inherit pname version;
       sha256 = "ffb9ef1de172603304d9d2819af6f5ece76f2e85ec10692a524dd876e72bf277";
     };
-    checkPhase = "${python.interpreter} -m unittest discover -s pytz/tests";
+    checkInputs = [ pytest ];
+    checkPhase = "pytest";
     meta = {
       description = "World timezone definitions, modern and historical";
       homepage = http://pythonhosted.org/pytz;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
-  PyYAML = python.pkgs.buildPythonPackage rec {
+  pyyaml = python.pkgs.buildPythonPackage rec {
     pname = "PyYAML";
     version = "3.13";
     src = python.pkgs.fetchPypi {
@@ -1745,7 +1685,7 @@ with rec {
     meta = {
       description = "YAML parser and emitter for Python";
       homepage = http://pyyaml.org/wiki/PyYAML;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -1756,13 +1696,13 @@ with rec {
       inherit pname version;
       sha256 = "3fd787d19ebb49919268f06f19310e8112d619ef364f7989246fc8753d469888";
     };
-    propagatedBuildInputs = [ blinker Flask ];
+    propagatedBuildInputs = [ blinker flask ];
     patchPhase = "sed -Ei \"s/[=<>,]+[0-9\.]+'/'/g\" setup.py";
     doCheck = false;
     meta = {
       description = "Raven is a client for Sentry (https://getsentry.com)";
       homepage = https://github.com/getsentry/raven-python;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
@@ -1775,7 +1715,7 @@ with rec {
     };
     propagatedBuildInputs = [ certifi chardet idna urllib3 ];
     checkInputs = [
-      PySocks
+      pysocks
       pytest-cov
       pytest-httpbin
       pytest-mock
@@ -1789,7 +1729,7 @@ with rec {
     meta = {
       description = "Python HTTP for Humans.";
       homepage = http://python-requests.org;
-      license = lib.licenses.asl20;
+      license = licenses.asl20;
     };
   };
 
@@ -1805,7 +1745,7 @@ with rec {
     meta = {
       description = "Python tool to find and list requirements of a Python project";
       homepage = https://github.com/landscapeio/requirements-detector;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -1820,7 +1760,7 @@ with rec {
     meta = {
       description = "Parses Pip requirement files";
       homepage = https://github.com/davidfischer/requirements-parser;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
@@ -1837,6 +1777,7 @@ with rec {
       distlib
       first
       packaging
+      pip
       requirements-parser
       toml
     ];
@@ -1844,7 +1785,7 @@ with rec {
     meta = {
       description = "A tool for converting between pip-style and pipfile requirements.";
       homepage = https://github.com/sarugaku/requirementslib;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -1859,23 +1800,23 @@ with rec {
     meta = {
       description = "A module for retrieving program settings from various sources in a consistant method.";
       homepage = https://github.com/jayclassless/setoptconf;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
-  setuptools_scm = python.pkgs.buildPythonPackage rec {
+  setuptools-scm = python.pkgs.buildPythonPackage rec {
     pname = "setuptools_scm";
-    version = "3.0.2";
+    version = "3.0.6";
     src = python.pkgs.fetchPypi {
       inherit pname version;
-      sha256 = "113cea38b2edba8538b7e608b58cbd7e09bb71b16d968a9b97e36b4805e06d59";
+      sha256 = "a9cd4250443f96947c35e4790513fc008b7cc91c1475b8b523e7c7dd69766437";
     };
     propagatedBuildInputs = [ pkgs.gitMinimal ];
     doCheck = false;
     meta = {
       description = "the blessed package to manage your versions by scm tags";
       homepage = https://github.com/pypa/setuptools_scm/;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -1890,7 +1831,7 @@ with rec {
     meta = {
       description = "Python 2 and 3 compatibility utilities";
       homepage = http://pypi.python.org/pypi/six/;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -1905,11 +1846,11 @@ with rec {
     meta = {
       description = "This package provides 16 stemmer algorithms (15 + Poerter English stemmer) generated from Snowball algorithms.";
       homepage = https://github.com/shibukawa/snowball_py;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
-  Sphinx = python.pkgs.buildPythonPackage rec {
+  sphinx = python.pkgs.buildPythonPackage rec {
     pname = "Sphinx";
     version = "1.7.6";
     src = python.pkgs.fetchPypi {
@@ -1918,12 +1859,12 @@ with rec {
     };
     propagatedBuildInputs = [
       alabaster
-      Babel
+      babel
       docutils
       imagesize
-      Jinja2
+      jinja2
       packaging
-      Pygments
+      pygments
       requests
       snowballstemmer
       sphinxcontrib-websupport
@@ -1932,7 +1873,7 @@ with rec {
     meta = {
       description = "Python documentation generator";
       homepage = http://sphinx-doc.org/;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
@@ -1947,7 +1888,7 @@ with rec {
     meta = {
       description = "Sphinx API for Web Apps";
       homepage = http://sphinx-doc.org/;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
@@ -1977,7 +1918,7 @@ with rec {
     meta = {
       description = "ANSII Color formatting for output in terminal.";
       homepage = http://pypi.python.org/pypi/termcolor;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -1988,7 +1929,7 @@ with rec {
       inherit pname version;
       sha256 = "5a1375bb2ba7968740508ae38d92e1f889a0832913cb1c447d5e2046061a396d";
     };
-    propagatedBuildInputs = [ pytest ];
+    checkInputs = [ pytest ];
     checkPhase = "pytest";
     meta = {
       description = "The most basic Text::Unidecode port";
@@ -2033,7 +1974,7 @@ with rec {
       inherit pname version;
       sha256 = "9f0cbcc36e08c2c4ae90d02d3d1f9a62231f974bcbc1df85e8045946d8261059";
     };
-    buildInputs = [ setuptools_scm ];
+    buildInputs = [ setuptools-scm ];
     propagatedBuildInputs = [ packaging pluggy py virtualenv ];
     checkInputs = [
       pytest-cov
@@ -2045,7 +1986,7 @@ with rec {
     patchPhase = "rm tests/test_z_cmdline.py";
     checkPhase = ''
       PYTEST_ADDOPTS="$PYTEST_ADDOPTS -n$NIX_BUILD_CORES"
-      pytest
+      pytest --timeout=180 . -n auto
     '';
     PYTEST_ADDOPTS = "-k 'not test_env_variables_added_to_pcall and not test_make_sdist'";
     meta = {
@@ -2083,11 +2024,11 @@ with rec {
     meta = {
       description = "a fork of Python 2 and 3 ast modules with type comment support";
       homepage = https://github.com/python/typed_ast;
-      license = lib.licenses.asl20;
+      license = licenses.asl20;
     };
   };
 
-  UkPostcodeParser = python.pkgs.buildPythonPackage rec {
+  ukpostcodeparser = python.pkgs.buildPythonPackage rec {
     pname = "UkPostcodeParser";
     version = "1.1.2";
     src = python.pkgs.fetchPypi {
@@ -2098,7 +2039,7 @@ with rec {
     meta = {
       description = "UK Postcode parser";
       homepage = https://github.com/hamstah/ukpostcodeparser;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -2129,7 +2070,7 @@ with rec {
     meta = {
       description = "HTTP library with thread-safe connection pooling, file post, and more.";
       homepage = https://urllib3.readthedocs.io/;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -2158,7 +2099,7 @@ with rec {
     meta = {
       description = "Virtual Python Environment builder";
       homepage = https://virtualenv.pypa.io/;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -2170,11 +2111,11 @@ with rec {
       sha256 = "23d837cf619c3bb75f87bc498c79cd4f27f0c54031ca88a9e05606c9dd627fef";
     };
     checkInputs = [ pytest-cov ];
-    checkPhase = "py.test";
+    checkPhase = "pytest";
     meta = {
       description = "Find dead code";
       homepage = https://github.com/jendrikseipp/vulture;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
@@ -2188,11 +2129,11 @@ with rec {
     meta = {
       description = "Measures number of Terminal column cells of wide-character codes";
       homepage = https://github.com/jquast/wcwidth;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
-  Werkzeug = python.pkgs.buildPythonPackage rec {
+  werkzeug = python.pkgs.buildPythonPackage rec {
     pname = "Werkzeug";
     version = "0.14.1";
     src = python.pkgs.fetchPypi {
@@ -2203,7 +2144,7 @@ with rec {
     meta = {
       description = "The comprehensive WSGI web application library.";
       homepage = https://www.palletsprojects.org/p/werkzeug/;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
@@ -2217,7 +2158,7 @@ with rec {
     meta = {
       description = "A tool to programmatically control windows inside X";
       homepage = http://bitbucket.org/antocuni/wmctrl;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
@@ -2233,7 +2174,7 @@ with rec {
     meta = {
       description = "Module for decorators, wrappers and monkey patching.";
       homepage = https://github.com/GrahamDumpleton/wrapt;
-      license = lib.licenses.bsdOriginal;
+      license = licenses.bsdOriginal;
     };
   };
 
@@ -2249,33 +2190,37 @@ with rec {
     meta = {
       description = "A semi hard Cornish cheese, also queries PyPI (PyPI client)";
       homepage = https://yarg.readthedocs.org/;
-      license = lib.licenses.mit;
+      license = licenses.mit;
     };
   };
 
 };
 python.pkgs.buildPythonPackage rec {
   pname = "distinfo";
-  version = "0.2.1.dev39+g3210ec3.d20180728";
+  version = "0.3.0.dev0";
   src = nix-gitignore.gitignoreSource ./.;
-  buildInputs = [ pkgs.glibcLocales pytest-runner setuptools_scm ];
+  buildInputs = [
+    pdbpp
+    pkgs.glibcLocales
+    prospector
+    pytest-runner
+    pytest-sugar
+  ];
   propagatedBuildInputs = [
     appdirs
     click
     coloredlogs
     munch
-    pdbpp
     pipreqs
     property-manager
-    prospector
     ptpython
-    pycmd
-    pytest-sugar
     pytoml
+    pyyaml
     requirementslib
     tox
   ];
   checkInputs = [ pytest-cov ];
+  patchPhase = "find . -type d -name __pycache__ -depth -exec rm -rf {} ';'";
   checkPhase = "pytest && cp coverage.xml $out";
   LANG = "en_US.UTF-8";
   meta = {
@@ -2284,3 +2229,5 @@ python.pkgs.buildPythonPackage rec {
     license = "GPL-3.0-or-later";
   };
 }
+# nixipy 0.0.0 on python 3.6.5
+# argv: nixipy --color --build-extra=dev --directory=../distinfo

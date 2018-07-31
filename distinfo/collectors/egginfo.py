@@ -3,27 +3,13 @@ import logging
 
 import pkg_resources
 
+from .. import const
 from .collector import Collector
 
 log = logging.getLogger(__name__)
 
 
 class EggInfo(Collector):
-
-    MULTI_KEYS = (
-        "classifier",
-        "obsoletes",
-        "obsoletes_dist",
-        "platform",
-        "project_url",
-        "provides",
-        "provides_dist",
-        "provides_extra",
-        "requires",
-        "requires_dist",
-        "requires_external",
-        "supported_platform",
-    )
 
     def _collect(self):
 
@@ -45,7 +31,7 @@ class EggInfo(Collector):
             if not value or value == "UNKNOWN":
                 continue
             key = key.lower().replace("-", "_")
-            if key in self.MULTI_KEYS:
+            if key in const.METADATA_MULTI:
                 self.metadata.setdefault(key, set()).add(value)
             else:
                 self.metadata[key] = value

@@ -13,6 +13,7 @@ from requirementslib.utils import pep423_name
 
 from setuptools import sandbox
 
+from . import const
 from .base import Base
 from .config import cfg
 from .requirement import Requirement
@@ -33,7 +34,8 @@ class Distribution(Base):
             requires_dist=set(),
             extensions=Munch(distinfo=DefaultMunch(None)),
         )
-        self.metadata.update(kwargs)
+        self.metadata.update({k: set(v) if k in const.METADATA_MULTI else v
+                              for k, v in kwargs.items()})
         if self.req is not None and self.req.is_file_or_url:
             with sandbox.pushd(self.req.req.path):
                 for name in cfg.collectors:

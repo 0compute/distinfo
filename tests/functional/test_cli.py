@@ -68,8 +68,8 @@ class TestCli(Case):
         assert "yyy; extra == 'xxx'" in result.output
 
     def test_interactive(self, monkeypatch, tmpdir):
-        monkeypatch.setattr(cli.repl, "embed", lambda *a, **k: True)
-        monkeypatch.setattr(appdirs, "user_cache_dir", lambda *a: tmpdir.mkdir("cache"))
+        monkeypatch.setattr(cli.repl, "embed", lambda *_a, **_k: True)
+        monkeypatch.setattr(appdirs, "user_cache_dir", lambda *_a: tmpdir.mkdir("cache"))
         self._invoke(tmpdir.mkdir("src"), "-i")
 
     def test_as_module(self, tmpdir, capsys):

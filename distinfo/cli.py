@@ -52,10 +52,7 @@ log = logging.getLogger(__name__)
 @click.option("--exclude", help="Exclude metadata keys")
 @click.version_option(VERSION)
 def main(source_dir, **options):
-    """
-    Extract metadata from Python source distributions
-    """
-
+    """Extract metadata from Python source distributions"""
     options = Munch(options)
 
     if options.color:

@@ -12,6 +12,7 @@ aaa
 bbb == 1
 """
 
+
 class XCollector(PackageCollector):  # pylint: disable=abstract-method
 
     name = "testpkg"

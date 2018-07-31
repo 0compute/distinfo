@@ -41,7 +41,6 @@ setup(
         "click",
         "coloredlogs",
         "munch",
-        "packaging",
         "pipreqs",
         "property-manager",
         "ptpython",
@@ -57,7 +56,6 @@ setup(
         dev=(
             "pdbpp",
             "prospector[with_everything]",
-            "pycmd",
             "pytest-sugar",
         ),
     ),

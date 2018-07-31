@@ -1,3 +1,16 @@
 strictness: high
 doc-warnings: false
 test-warnings: true
+
+mccabe:
+  run: false
+
+pep257:
+  disable:
+    - D100
+    - D101
+    - D102
+    - D103
+    - D104
+    - D105
+    - D107

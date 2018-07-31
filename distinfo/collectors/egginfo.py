@@ -27,7 +27,10 @@ class EggInfo(Collector):
 
     def _collect(self):
 
-        pkg_infos = list(self.path.glob("**/PKG-INFO"))
+        pkg_infos = list(filter(
+            lambda p: not str(p).startswith(".eggs/"),
+            self.path.glob("**/PKG-INFO"),
+        ))
         if not pkg_infos:
             log.warning("%r has no PKG-INFO", self)
             return

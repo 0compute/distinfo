@@ -7,8 +7,6 @@ from packaging.markers import Marker
 
 import pkg_resources
 
-from property_manager import cached_property
-
 from requirementslib.utils import pep423_name
 
 from setuptools import sandbox
@@ -87,7 +85,7 @@ class Distribution(Base):
                     filtered.add(req)
         return filtered
 
-    @cached_property
+    @property
     def requires(self):
         reqs = set(map(Requirement.from_line, self.requires_dist))
         requires = DefaultMunch(set())
@@ -140,5 +138,4 @@ class Distribution(Base):
                 req.markers = req.req.markers = "extra == '%s'" % extra
 
         self.requires_dist.add(str(req))
-        del self.requires
         return req

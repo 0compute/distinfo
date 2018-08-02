@@ -41,7 +41,6 @@ setup(
         "coloredlogs",
         "munch",
         "pipreqs",
-        "property-manager",
         "ptpython",
         "pytoml",
         "requirementslib",

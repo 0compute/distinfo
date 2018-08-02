@@ -34,10 +34,10 @@ class TestPipReqs(Case):
 
     def test_collect_empty(self, tmpdir):
         collector = super().test_collect_empty(tmpdir)
-        assert not collector.ext.imports
+        assert "imports" not in collector.ext
 
     def test_collect_fail(self, monkeypatch, tmpdir):
         tmpdir.join("xxx").mkdir().join("__init__.py") .write("import aaa")
         monkeypatch.setattr(pipreqs, "get_pkg_names", self._raiser())
         collector = self._collect(tmpdir, packages={"xxx"})
-        assert not collector.ext.imports
+        assert "imports" not in collector.ext

@@ -22,6 +22,8 @@ def clean_dict(obj):
             drop.append(key)
         elif isinstance(value, dict):
             clean_dict(value)
+            if not value:
+                drop.append(key)
     for key in drop:
         del obj[key]
 

@@ -14,4 +14,4 @@ class TestFindTests(Case):
 
     def test_collect_empty(self, tmpdir):
         collector = super().test_collect_empty(tmpdir)
-        assert not collector.ext.tests
+        assert "tests" not in collector.ext

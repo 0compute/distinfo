@@ -66,7 +66,7 @@ class TestRequirementsFile(Case):
         assert collector.ext.tox.env.ONE == "1"
 
     def _assert_empty(self, collector):
-        assert not collector.ext.tox
+        assert "tox" not in collector.ext
         assert not collector.requires
 
     def test_collect_alt(self, tmpdir):

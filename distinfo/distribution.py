@@ -32,7 +32,7 @@ class Distribution(Base):
             version="0.0.0",
             provides_extra=set(),
             requires_dist=set(),
-            extensions=Munch(distinfo=DefaultMunch(None)),
+            extensions=Munch(distinfo=Munch()),
         )
         self.metadata.update({k: set(v) if k in const.METADATA_MULTI else v
                               for k, v in kwargs.items()})

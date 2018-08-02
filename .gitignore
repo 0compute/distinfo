@@ -6,6 +6,7 @@
 /.cache/
 /.coverage
 /.coverage.*
+/.default.nix
 /.env
 /.htmlcov/
 /.no-nix

@@ -23,11 +23,11 @@ test: $(EGG_INFO)
 	pytest $(ARGS)
 
 .PHONY: utest
-utest: override ARGS += -k unit
+utest: override ARGS += -k unit --ignore=tests/functional
 utest: test
 
 .PHONY: ftest
-ftest: override ARGS += -k functional
+ftest: override ARGS += -k functional --ignore=tests/unit
 ftest: test
 
 .PHONY: lint

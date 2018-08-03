@@ -2,7 +2,6 @@ import configparser
 import logging
 from pathlib import Path
 
-from .. import util
 from ..base import Base
 from ..requirement import Requirement
 

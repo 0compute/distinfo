@@ -1,4 +1,4 @@
-from distinfo.requirement import Requirement
+from ...requirement import Requirement
 
 from .cases import Case
 

@@ -1,4 +1,4 @@
-from distinfo.collectors.pipfile import Pipfile
+from ....collectors.pipfile import Pipfile
 
 from .cases import Case
 

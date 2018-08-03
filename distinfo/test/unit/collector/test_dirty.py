@@ -1,4 +1,4 @@
-from distinfo.collectors.dirty import Dirty
+from ....collectors.dirty import Dirty
 
 from .cases import Case
 

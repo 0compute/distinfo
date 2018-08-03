@@ -1,8 +1,8 @@
 import importlib
 
-from distinfo import config
-from distinfo.distribution import Distribution
-from distinfo.requirement import Requirement
+from ... import config
+from ...distribution import Distribution
+from ...requirement import Requirement
 
 from .cases import Case
 

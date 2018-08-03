@@ -1,4 +1,4 @@
-from distinfo.collectors.requirementsfile import RequirementsFile
+from ....collectors.requirementsfile import RequirementsFile
 
 from .cases import Case
 

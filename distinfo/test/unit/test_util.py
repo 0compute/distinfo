@@ -2,7 +2,7 @@ import io
 
 import pytest
 
-from distinfo import util
+from ... import util
 
 from .cases import Case
 

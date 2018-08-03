@@ -1,4 +1,4 @@
-from distinfo.collectors.egginfo import EggInfo
+from ....collectors.egginfo import EggInfo
 
 from .cases import Case
 

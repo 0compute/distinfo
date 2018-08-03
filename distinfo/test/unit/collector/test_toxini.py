@@ -2,7 +2,7 @@ import sys
 
 from tox.exception import ConfigError
 
-from distinfo.collectors import toxini
+from ....collectors import toxini
 
 from .cases import Case
 

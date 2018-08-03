@@ -9,7 +9,7 @@ import pytest
 
 from setuptools import sandbox
 
-from distinfo import cli
+from ... import cli
 
 from .cases import Case
 

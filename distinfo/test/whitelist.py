@@ -4,7 +4,7 @@
 import distutils
 import logging
 
-from distinfo import Distribution, config
+from .. import Distribution, config
 
 distutils.core._setup_stop_after
 

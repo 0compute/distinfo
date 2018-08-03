@@ -25,7 +25,7 @@ setup(
         "Topic :: System :: Archiving :: Packaging",
         "Topic :: System :: Software Distribution",
     ],
-    packages=find_packages(exclude=["tests*"]),
+    packages=find_packages(exclude=["distinfo.test*"]),
     include_package_data=True,
     entry_points=dict(
         console_scripts=(

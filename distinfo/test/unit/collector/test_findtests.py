@@ -1,4 +1,4 @@
-from distinfo.collectors.findtests import FindTests
+from ....collectors.findtests import FindTests
 
 from .cases import Case
 

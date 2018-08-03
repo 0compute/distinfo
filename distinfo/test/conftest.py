@@ -1,6 +1,6 @@
 import pytest
 
-from distinfo import config
+from .. import config
 
 
 @pytest.fixture(autouse=True)

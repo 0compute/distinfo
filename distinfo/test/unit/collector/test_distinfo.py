@@ -1,5 +1,5 @@
-from distinfo import const
-from distinfo.collectors import distinfo
+from .... import const
+from ....collectors import distinfo
 
 from .cases import Case
 

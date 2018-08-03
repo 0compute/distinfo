@@ -1,4 +1,4 @@
-from distinfo.collectors.pytest import Pytest
+from ....collectors.pytest import Pytest
 
 from .cases import Case
 

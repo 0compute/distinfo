@@ -1,6 +1,6 @@
 from pipreqs import pipreqs
 
-from distinfo.collectors.pipreqs import PipReqs
+from ....collectors.pipreqs import PipReqs
 
 from .cases import Case
 

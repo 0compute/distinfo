@@ -1,4 +1,4 @@
-from distinfo.base import Base
+from ...base import Base
 
 from .cases import Case
 

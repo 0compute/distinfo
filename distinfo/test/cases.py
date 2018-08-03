@@ -1,6 +1,6 @@
 from setuptools import sandbox
 
-from distinfo import const
+from .. import const
 
 SETUP = """
 from setuptools import setup

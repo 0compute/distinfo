@@ -1,4 +1,4 @@
-from distinfo.collectors.pep518 import Pep518
+from ....collectors.pep518 import Pep518
 
 from .cases import Case
 

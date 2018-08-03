@@ -1,7 +1,7 @@
 from setuptools import sandbox
 
-from distinfo import util
-from distinfo.distribution import Distribution
+from .... import util
+from ....distribution import Distribution
 
 from ..cases import Case as _Case
 

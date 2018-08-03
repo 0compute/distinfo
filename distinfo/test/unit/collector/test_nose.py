@@ -1,4 +1,4 @@
-from distinfo.collectors.nose import Nose
+from ....collectors.nose import Nose
 
 from .cases import Case
 

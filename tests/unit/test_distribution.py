@@ -27,6 +27,12 @@ class TestDistribution(Case):
         dist = Distribution()
         assert dist.normalized_name == "unknown"
 
+    def test_version(self):
+        dist = Distribution()
+        assert dist.version == "0.0.0"
+        dist.version = "1"
+        assert dist.metadata.version == "1"
+
     def test_add_requirement(self):
         dist = Distribution()
         dist.add_requirement("xxx")

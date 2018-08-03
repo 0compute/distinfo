@@ -61,6 +61,10 @@ class Distribution(Base):
     def version(self):
         return self.metadata.version
 
+    @version.setter
+    def version(self, version):
+        self.metadata.version = version
+
     @property
     def provides_extra(self):
         return self.metadata.provides_extra

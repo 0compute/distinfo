@@ -31,7 +31,6 @@ class Collector(Base):
     def collect(self):
         assert self.path is not None
         self._collect()
-        util.clean_dict(self.ext)
 
     def add_requirement(self, req, extra):
         req = self.dist.add_requirement(req, extra=extra)

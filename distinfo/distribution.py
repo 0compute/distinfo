@@ -73,6 +73,10 @@ class Distribution(Base):
     def ext(self):
         return self.metadata.extensions.distinfo
 
+    @ext.setter
+    def ext(self, ext):
+        self.metadata.extensions.distinfo = ext
+
     def _filter_reqs(self, reqs, extra):
         filtered = set()
         env = dict(extra=extra)

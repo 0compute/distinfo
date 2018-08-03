@@ -16,16 +16,13 @@ DEFAULT_DUMPER = "json"
 
 
 def clean_dict(obj):
-    drop = []
+    clean = type(obj)()
     for key, value in obj.items():
-        if not isinstance(value, bool) and not value:
-            drop.append(key)
-        elif isinstance(value, dict):
-            clean_dict(value)
-            if not value:
-                drop.append(key)
-    for key in drop:
-        del obj[key]
+        if isinstance(value, dict):
+            value = clean_dict(value)
+        if value:
+            clean[key] = value
+    return clean
 
 
 def _todict(obj):

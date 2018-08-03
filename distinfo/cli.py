@@ -92,7 +92,7 @@ def main(source_dir, **options):
         kwargs = Munch(fmt=options.fmt)
         if options.pretty and options.fmt == "json":
             kwargs.indent = 2
-        dump = util.dumps(obj, **kwargs)
+        dump = util.dumps(util.clean_dict(obj), **kwargs)
         if options.output:
             with open(options.output, "w") as stream:
                 stream.write(dump)

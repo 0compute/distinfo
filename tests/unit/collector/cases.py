@@ -1,5 +1,6 @@
 from setuptools import sandbox
 
+from distinfo import util
 from distinfo.distribution import Distribution
 
 from ..cases import Case as _Case
@@ -19,6 +20,7 @@ class Case(_Case):
         collector = self.collector(dist)  # pylint: disable=not-callable
         with sandbox.pushd(path), sandbox.save_path():
             collector.collect()
+        dist.ext = util.clean_dict(dist.ext)
         return collector
 
     def test_collect_empty(self, tmpdir):

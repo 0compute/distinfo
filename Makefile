@@ -2,7 +2,7 @@ include .skel/Makefile
 
 $(eval $(call TEST,ptest,acceptance/test_packages.py))
 
-NUM_PROCESSES ?= auto
+NUM_PROCESSES ?= $(shell expr $$(nproc) - 1)
 
 atest ptest: override ARGS += --numprocesses=$(NUM_PROCESSES)
 

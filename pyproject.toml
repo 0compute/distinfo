@@ -79,6 +79,8 @@ dev = [
     "yappi",
     # test
     "pytest-cov",
+    "pytest-flakefinder",
+    "pytest-random-order",
     "pytest-sugar",
     "pytest-xdist",
     # used by tests/covconfig.py
@@ -198,6 +200,8 @@ addopts = """
     --show-capture stderr
     --showlocals
     --tb short
+    --random-order
+    --random-order-bucket=global
 """
 filterwarnings = [
     "ignore::DeprecationWarning",

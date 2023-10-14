@@ -2497,6 +2497,54 @@ with rec {
     }
   );
 
+  pytest-flakefinder = (
+    python.pkgs.buildPythonPackage
+    rec {
+      pname = "pytest-flakefinder";
+      version = "1.1.0";
+      src = (
+        python.pkgs.fetchPypi
+        {
+          pname = pname;
+          version = version;
+          sha256 = "e2412a1920bdb8e7908783b20b3d57e9dad590cc39a93e8596ffdd493b403e0e";
+        }
+      );
+      propagatedBuildInputs = [ pytest ];
+      doCheck = false;
+      meta = {
+        description = "Runs tests multiple times to expose flakiness.";
+        homepage = "https://github.com/dropbox/pytest-flakefinder";
+        license = pkgs.lib.licenses.asl20;
+      };
+      pythonImportsCheck = [ "pytest_flakefinder" ];
+    }
+  );
+
+  pytest-random-order = (
+    python.pkgs.buildPythonPackage
+    rec {
+      pname = "pytest-random-order";
+      version = "1.1.0";
+      src = (
+        python.pkgs.fetchPypi
+        {
+          pname = pname;
+          version = version;
+          sha256 = "dbe6debb9353a7af984cc9eddbeb3577dd4dbbcc1529a79e3d21f68ed9b45605";
+        }
+      );
+      propagatedBuildInputs = [ pytest ];
+      doCheck = false;
+      meta = {
+        description = "Randomise the order in which pytest tests are run with some control over the randomness";
+        homepage = "https://github.com/jbasko/pytest-random-order";
+        license = pkgs.lib.licenses.mit;
+      };
+      pythonImportsCheck = [ "random_order" ];
+    }
+  );
+
   pytest-sugar = (
     python.pkgs.buildPythonPackage rec
     {
@@ -3746,6 +3794,8 @@ with rec {
       pylsp-mypy
       pytest-asyncio
       pytest-cov
+      pytest-flakefinder
+      pytest-random-order
       pytest-sugar
       pytest-xdist
       python-lsp-black

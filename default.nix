@@ -2584,7 +2584,7 @@ with rec {
         }
       );
       nativeBuildInputs = [ setuptools-scm ];
-      propagatedBuildInputs = [ execnet pytest ];
+      propagatedBuildInputs = [ execnet psutil pytest setproctitle ];
       doCheck = false;
       meta = {
         description = "pytest xdist plugin for distributed testing, most importantly across multiple CPUs";
@@ -2855,6 +2855,29 @@ with rec {
         license = pkgs.lib.licenses.mit;
       };
       pythonImportsCheck = [ "ruyaml" ];
+    }
+  );
+
+  setproctitle = (
+    python.pkgs.buildPythonPackage
+    rec {
+      pname = "setproctitle";
+      version = "1.3.3";
+      src = (
+        python.pkgs.fetchPypi
+        {
+          pname = pname;
+          version = version;
+          sha256 = "c913e151e7ea01567837ff037a23ca8740192880198b7fbb90b16d181607caae";
+        }
+      );
+      doCheck = false;
+      meta = {
+        description = "A Python module to customize the process title";
+        homepage = "https://github.com/dvarrazzo/py-setproctitle";
+        license = pkgs.lib.licenses.bsd3;
+      };
+      pythonImportsCheck = [ "setproctitle" ];
     }
   );
 

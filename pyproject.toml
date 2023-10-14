@@ -82,7 +82,7 @@ dev = [
     "pytest-flakefinder",
     "pytest-random-order",
     "pytest-sugar",
-    "pytest-xdist",
+    "pytest-xdist[psutil,setproctitle]",
     # used by tests/covconfig.py
     "toml",
 ]
@@ -201,7 +201,7 @@ addopts = """
     --showlocals
     --tb short
     --random-order
-    --random-order-bucket=global
+    --random-order-bucket global
 """
 filterwarnings = [
     "ignore::DeprecationWarning",

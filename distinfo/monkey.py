@@ -20,7 +20,7 @@ def patch_setuptools() -> None:  # pragma: no utest cover
         not isinstance(discovery.log, logging.Logger)
         or discovery.log.name != discovery.__name__
     ):
-        discovery.log = logging.getLogger(discovery.__name__)  # type: ignore[assignment]
+        discovery.log = logging.getLogger(discovery.__name__)
         discovery.log.warn = discovery.log.debug  # type: ignore[method-assign]
 
 

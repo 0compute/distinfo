@@ -9,8 +9,6 @@ from .cases import Case
 if TYPE_CHECKING:
     from py.path import local
 
-    from distinfo.collector import Collector
-
 
 class TestFindTests(Case):
     collector = FindTests
@@ -20,14 +18,13 @@ class TestFindTests(Case):
         collector, _requires = await self._collect(tmpdir)
         assert collector.dist.ext.tests == {"test.py"}
 
-    async def test_collect_empty(self, tmpdir: local) -> Collector:
-        collector, _requires = await self._collect(tmpdir)
+    async def test_collect_empty(self, tmpdir: local) -> None:
+        collector, _requires = await self._collect(tmpdir, fail=True)
         assert "tests" not in collector.dist.ext
 
     async def test_collect_empty_testdir(self, tmpdir: local) -> None:
         tmpdir.join("test").mkdir()
-        collector, _requires = await self._collect(tmpdir)
-        assert "tests" not in collector.dist.ext
+        await self.test_collect_empty(tmpdir)
 
     async def test_collect_excluded(self, tmpdir: local) -> None:
         self._write_package(tmpdir, "example", mod_name="test")

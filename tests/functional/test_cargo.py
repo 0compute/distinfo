@@ -13,6 +13,14 @@ if TYPE_CHECKING:
 class TestCargo(Case):
     collector = Cargo
 
+    async def test_collect_empty(self, tmpdir: local) -> None:
+        collector, _requires = await self._collect(tmpdir, fail=True)
+        assert "cargo" not in collector.dist.ext
+
+    async def test_collect_ignored(self, tmpdir: local) -> None:
+        tmpdir.join("examples/a/b/Cargo.lock").write("", ensure=True)
+        await self.test_collect_empty(tmpdir)
+
     async def test_collect_root(self, tmpdir: local) -> None:
         tmpdir.join("a.file").write("")
         tmpdir.join("Cargo.lock").write("")
@@ -23,8 +31,3 @@ class TestCargo(Case):
         tmpdir.join("a/b/c/Cargo.lock").write("", ensure=True)
         collector, _requires = await self._collect(tmpdir)
         assert collector.dist.ext.cargo == "a/b/c"
-
-    async def test_collect_ignored(self, tmpdir: local) -> None:
-        tmpdir.join("examples/a/b/Cargo.lock").write("", ensure=True)
-        collector, _requires = await self._collect(tmpdir)
-        assert "cargo" not in collector.dist.ext

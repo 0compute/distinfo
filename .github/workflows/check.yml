@@ -10,6 +10,7 @@ jobs:
     env:
       ARGS: -vv
       COV_REPORT: xml
+      RUFF_FORMAT: github
     steps:
       - uses: actions/checkout@v4
         with:

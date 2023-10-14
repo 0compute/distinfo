@@ -15,7 +15,7 @@ from ..base import DATACLASS_DEFAULTS, Base
 from ..distribution import Distribution
 from .cargo import Cargo
 from .collector import Collector, CollectorMixin
-from .findpackages import FindPackages
+from .findpkgs import FindPkgs
 from .findtests import FindTests
 from .metadata import (
     PathMetadata,
@@ -217,7 +217,7 @@ class DistCollector(CollectorMixin, Base):
             tg.start_soon(self._collector, PathMetadata)
             # run path packages collector if modules and packages not set
             if not ("modules" in self.dist.ext or "packages" in self.dist.ext):
-                tg.start_soon(self._collector, FindPackages)
+                tg.start_soon(self._collector, FindPkgs)
 
     @overload
     async def _collector(self, cls: type[Collector]) -> bool:

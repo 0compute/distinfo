@@ -1,15 +1,14 @@
-[html]
-title = "Functional Test Coverage Report"
+[run]
+omit = [
+    "distinfo/__main__.py",
+    "distinfo/cli.py",
+    "tests/acceptance/*",
+    "tests/unit/*",
+]
 
 [report]
-# TODO: once things have stabilized - there are some code paths that may not be needed
-# fail_under = 90
 exclude_lines = [
     "pragma: no ftest cover",
     "pragma: no utest ftest cover",
     "pragma: no ftest ptest cover",
-]
-omit = [
-    "tests/acceptance/*",
-    "tests/unit/*",
 ]

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from distinfo.collector import FindPackages
+from distinfo.collector import FindPkgs
 
 from .cases import Case
 
@@ -10,15 +10,15 @@ if TYPE_CHECKING:
     from py.path import local
 
 
-class TestFindPackages(Case):
-    collector = FindPackages
+class TestFindPkgs(Case):
+    collector = FindPkgs
 
     async def test_collect_empty(self, tmpdir: local) -> None:
         collector, _requires = await self._collect(tmpdir)
         for key in ("modules", "packages"):
             assert key not in collector.dist.ext
 
-    async def test_collect_packages(self, tmpdir: local) -> None:
+    async def test_collect_pkgs(self, tmpdir: local) -> None:
         aaa = self._write_package(tmpdir, "aaa")
         self._write_package(aaa, "bbb")
         self._write_package(tmpdir, "ccc")

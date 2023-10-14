@@ -1,11 +1,4 @@
-[html]
-title = "Unit Test Coverage Report"
-
-[report]
-exclude_lines = [
-    "pragma: no utest cover",
-    "pragma: no utest ftest cover",
-]
+[run]
 omit = [
     "distinfo/__main__.py",
     "distinfo/cli.py",
@@ -14,4 +7,10 @@ omit = [
     "distinfo/logconfig.py",
     "tests/acceptance/*",
     "tests/functional/*",
+]
+
+[report]
+exclude_lines = [
+    "pragma: no utest cover",
+    "pragma: no utest ftest cover",
 ]

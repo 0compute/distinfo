@@ -14,7 +14,7 @@ from .findtests import FindTests
 
 
 @dataclasses.dataclass(**DATACLASS_DEFAULTS)
-class FindPackages(Collector):
+class FindPkgs(Collector):
     async def _collect(self) -> bool:
         from setuptools import Distribution as SetuptoolsDistribution
         from setuptools.discovery import ConfigDiscovery

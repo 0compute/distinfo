@@ -1,12 +1,11 @@
-[html]
-title = "Acceptance Test Coverage Report"
+[run]
+omit = [
+    "tests/functional/*",
+    "tests/unit/*",
+]
 
 [report]
 exclude_lines = [
     "pragma: no ptest cover",
     "pragma: no ftest ptest cover",
-]
-omit = [
-    "tests/functional/*",
-    "tests/unit/*",
 ]

@@ -111,22 +111,19 @@ homepage = "https://github.com/0compute/distinfo"
 [tool.black]
 target-version = ["py310"]
 
-[tool.coverage.html]
-directory = ".htmlcov"
-show_contexts = true
-
 [tool.coverage.run]
 branch = true
-concurrency = ["thread"]
 data_file = ".coverage"
 parallel = true
 source = [
-    "distinfo",
-    "tests",
+    ".",
 ]
-
-[tool.coverage.xml]
-output = "coverage.xml"
+omit = [
+    ".skel/*",
+    "tests/sitecustomize.py",
+    "tests/whitelist.py",
+]
+relative_files = true
 
 [tool.coverage.report]
 exclude_lines = [
@@ -137,13 +134,15 @@ exclude_lines = [
     "pass",
 ]
 # fail_under = 100
-omit = [
-    "tests/covcfg.py",
-    "tests/sitecustomize.py",
-    "tests/whitelist.py",
-]
 # don't skip covered because we want to see what contexts exercise a code path
 # skip_covered = true
+
+[tool.coverage.html]
+directory = ".htmlcov"
+show_contexts = true
+
+[tool.coverage.xml]
+output = "coverage.xml"
 
 [tool.isort]
 profile = "black"

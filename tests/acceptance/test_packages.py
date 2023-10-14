@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import dataclasses
 import os
 import pathlib
@@ -36,7 +37,7 @@ DEFAULT_BUILD_SYSTEM_REQUIRES = {
 }
 
 HERE = pathlib.Path(__file__).parent
-PACKAGES = Box(util.loads((HERE / "test_packages.yaml").read_text()))
+PACKAGES = Box(util.load((HERE / "test_packages.yaml").open()))
 FIXTURES = []
 for name, versions in PACKAGES.items():
     for version in list(versions):
@@ -58,7 +59,9 @@ class TestPackages(Case):
         caplog: pytest.CaptureFixture,
         tmp_path: pytest.TempPathFactory,
     ) -> None:
-        package = PACKAGES[name][version]
+        # deepcopy package conf because we pop from it and this test may be run multiple
+        # times under pytest-flakefinder
+        package = copy.deepcopy(PACKAGES[name][version])
         if not package:  # pragma: no cover
             # marking todo
             pytest.skip()
@@ -135,8 +138,8 @@ class TestPackages(Case):
             )
 
         self.log.debug(
-            f"\n** test:\n{util.dumps(package)}\n"
-            f"\n** dist:\n{util.dumps(dict(ext=dist.ext, requires=dist.requires))}"
+            f"\n** {name}:\n{util.dumps(package)}\n"
+            f"\n** result:\n{util.dumps(dict(ext=dist.ext, requires=dist.requires))}"
         )
 
         logged = package.pop("logged", None)
@@ -158,12 +161,6 @@ class TestPackages(Case):
         for key, value in package.items():
             self._assert_contains(key, value, getattr(dist, key))
 
-    async def test_collect_self(self) -> None:
-        # collect self to exercise git find files
-        dist = await DistCollector.from_path(anyio.Path(HERE.parent.parent))
-        assert dist.name == const.NAME
-        assert dist.requires
-
     def _assert_contains(self, key: str, test: Any, dist: Any) -> None:
         if isinstance(test, dict):
             assert isinstance(dist, dict), f"key: {key}"
@@ -173,6 +170,12 @@ class TestPackages(Case):
             if isinstance(test, list):
                 test = set(test)
             assert test == dist, f"key: {key}"
+
+    async def test_collect_self(self) -> None:
+        # collect self to exercise git find files
+        dist = await DistCollector.from_path(anyio.Path(HERE.parent.parent))
+        assert dist.name == const.NAME
+        assert dist.requires
 
 
 class Requires(BaseRequires):

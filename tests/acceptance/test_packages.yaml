@@ -563,12 +563,12 @@ setuptools_scm_git_archive:
           .git_archival.txt: setuptools_scm_git_archive:parse
       format: setuptools
       packages:
-      - setuptools_scm_git_archive
+        - setuptools_scm_git_archive
       tests:
-      - tests.py
+        - tests.py
     requires:
       build_system_requires:
-      - setuptools-scm<8
+        - setuptools-scm<8
 
 # cargo in ignored dirs
 setuptools-rust:

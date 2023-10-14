@@ -35,7 +35,7 @@ TEST_EXTRA = "test"
 DEFAULT_BUILD_SYSTEM_REQUIRES = ("setuptools", "wheel")
 
 IGNORE_DIR_NAMES = capnames(
-    "doc", "example", "examples", "samples", "vendor", "_vendored"
+    "doc", "example", "examples", "samples", "vendor", "vendored"
 )
 
 TEST_DIR_NAMES = capnames("test", "tests", "testing", "unittests")

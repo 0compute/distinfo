@@ -207,6 +207,7 @@ filterwarnings = [
     "ignore::DeprecationWarning",
     "ignore::UserWarning",
 ]
+tmp_path_retention_policy = "failed"
 
 [tool.ruff]
 extend-exclude = [

@@ -9,11 +9,16 @@ jobs:
     runs-on: ubuntu-latest
     env:
       RUFF_FORMAT: github
+      SKIP: mypy
     steps:
       - uses: 0compute/py-skeleton@main
         with:
           cachix-authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
-      - run: ruff check .
+      - run: make lint
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        if: failure()
+        with:
+          commit_message: auto linted
   test:
     runs-on: ubuntu-latest
     env:

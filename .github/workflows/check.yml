@@ -5,35 +5,45 @@ on:
   pull_request:
 
 jobs:
-  check:
+  lint:
+    runs-on: ubuntu-latest
+    env:
+      RUFF_FORMAT: github
+    steps:
+      - uses: 0compute/py-skeleton@main
+        with:
+          cachix-authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+      - run: ruff check .
+  test:
     runs-on: ubuntu-latest
     env:
       ARGS: -vv
       COV_REPORT: xml
-      RUFF_FORMAT: github
+    strategy:
+      matrix:
+        test:
+          - utest
+          - ftest
+          - atest
     steps:
-      - uses: actions/checkout@v4
+      - uses: 0compute/py-skeleton@main
         with:
-          submodules: recursive
+          cachix-authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
       - uses: actions/cache@v3
         with:
           path: /var/tmp/distinfo-test-packages
           key: test-packages-${{ hashFiles('tests/acceptance/test_packages.yaml') }}
-      - uses: DeterminateSystems/nix-installer-action@v6
-      - uses: DeterminateSystems/magic-nix-cache-action@v2
-      - uses: cachix/cachix-action@v12
+      - run: make ${{ matrix.test }}
+      - uses: coverallsapp/github-action@v2
         with:
-          name: distinfo
-          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
-      - uses: HatsuneMiku3939/direnv-action@v1
-      - run: ruff check .
-      - run: make utest
-      - run: make ftest
-      - run: make atest
-        env:
-          ARGS: -xvv --flake-finder
-      - run: make coverage-combined
-      - uses: codacy/codacy-coverage-reporter-action@v1.3.0
+          file: coverage-${{ matrix.test }}.xml
+          flag-name: ${{ matrix.test }}
+          parallel: true
+  coveralls:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: coverallsapp/github-action@v2
         with:
-          api-token: ${{ secrets.CODACY_API_TOKEN }}
-          coverage-reports: coverage.xml
+          parallel-finished: true
+          carryforward: ${{ join(matrix.*, ',') }}

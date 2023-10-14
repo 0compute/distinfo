@@ -1,7 +1,6 @@
 # Distinfo
 
-[![Quality](https://app.codacy.com/project/badge/Grade/810984e4772f4a20863e1c384c54a5a6)](https://app.codacy.com/gh/0compute/distinfo/dashboard)
-[![Coverage](https://app.codacy.com/project/badge/Coverage/810984e4772f4a20863e1c384c54a5a6)](https://app.codacy.com/gh/0compute/distinfo/dashboard)
+[![Coverage](https://coveralls.io/repos/github/0compute/distinfo/badge.svg?branch=main)](https://coveralls.io/github/0compute/distinfo?branch=main)
 
 `distinfo` is a library for extracting metadata from Python distributions.
 

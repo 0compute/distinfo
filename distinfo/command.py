@@ -76,17 +76,17 @@ async def run(
                 with contextlib.suppress(ProcessLookupError):
                     proc.kill()
                 raise
-            out = stdout_buffer.getvalue()
-            if returncode != 0:  # pragma: no cover - error path
-                raise CalledProcessError(
-                    returncode,
-                    command,
-                    out,
-                    "\n".join(stderr_lines),
-                )
-            if lines:
-                return out.decode().strip().splitlines()
-            return out
+        out = stdout_buffer.getvalue()
+        if returncode != 0:  # pragma: no cover - error path
+            raise CalledProcessError(
+                returncode,
+                command,
+                out,
+                "\n".join(stderr_lines),
+            )
+        if lines:
+            return out.decode().strip().splitlines()
+        return out
 
 
 async def _process_stdout(stream: ByteReceiveStream, buffer: io.BytesIO) -> None:

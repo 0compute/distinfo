@@ -97,19 +97,9 @@ class DistCollector(CollectorMixin, Base):
                             if exc.returncode == 2:
                                 raise FileNotFoundError(path) from None
                             raise
-                        if files:
-                            # "--verbose" flag lists directories as well as files - we don't
-                            # want directories
-                            files = [
-                                path for path in files if not path.endswith(os.sep)
-                            ]
-                        else:  # pragma: no ptest cover
-                            # FIXME: this happens under nixipy with high concurrency dk why
-                            util.raise_on_hit()
-                            warning = "tar extract verbose fail"
-                            cls.clog.warning(warning)
-                            ext.warnings = [warning]
-                            files = await cls._find_files(path)
+                        # "--verbose" flag lists directories as well as files - we don't
+                        # want directories
+                        files = [path for path in files if not path.endswith(os.sep)]
                     else:
                         try:
                             files = await command.run(

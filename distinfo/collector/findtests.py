@@ -37,4 +37,5 @@ class FindTests(Collector):
                 util.raise_on_hit()
             self.dist.ext.tests = set(tests)
             self.log.debug(f"found tests: {util.irepr(tests, repr=str)}")
-        return True
+            return True
+        return False

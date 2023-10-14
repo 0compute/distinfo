@@ -18,5 +18,5 @@ class Cargo(Collector):
             if path.endswith(self.CARGO_LOCK):
                 self.dist.ext.cargo = str(anyio.Path(path).parent)
                 self.log.debug(f"found Cargo.lock: {self.dist.ext.cargo}")
-                break
-        return True
+                return True
+        return False

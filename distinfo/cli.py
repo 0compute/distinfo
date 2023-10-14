@@ -156,5 +156,5 @@ async def _async_main(path: click.Path, options: Box) -> None:
     except (Exception, anyio.ExceptionGroup) as exc:  # pragma: no cover
         if not options.pdb:
             raise
-        print(exc, file=sys.stderr)
+        print(exc, file=sys.stderr)  # noqa: T201
         __import__("pdb").post_mortem(exc.__traceback__)

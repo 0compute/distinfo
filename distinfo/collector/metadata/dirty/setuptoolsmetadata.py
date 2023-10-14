@@ -109,7 +109,6 @@ class SetuptoolsMetadata(DirtyCollector):
                 sys.path.insert(0, str(self.path))
                 for where in self.dist.ext.get("where", ["."]):
                     sys.path.insert(0, str(self.path / where))
-                    print(where, file=sys.stderr)
                     try:
                         sandbox._execfile(
                             setup_py_str,

@@ -256,8 +256,6 @@ ignore = [
     "S113",
     # Private member accessed
     "SLF001",
-    # I permit myself to print
-    "T201",
     # Relative imports from parent modules are banned
     "TID252",
     # Create your own exception

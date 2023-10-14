@@ -4,7 +4,7 @@ import os
 
 import pytest
 
-from distinfo import Requirement, logconfig, util
+from distinfo import Requirement, logconfig
 from distinfo.collector.metadata.dirty.dirtycollector import DirtyCollector
 
 
@@ -24,7 +24,6 @@ def _patch_requirement_hash(monkeypatch: pytest.MonkeyPatch) -> None:
 
 @pytest.fixture(autouse=True)
 def _setenv(monkeypatch: pytest.MonkeyPatch) -> None:
-    os.environ[util.envvar("testing")] = "1"
     if "COVERAGE_PROCESS_START" in os.environ:  # pragma: no branch
         monkeypatch.setattr(
             DirtyCollector,

@@ -251,24 +251,15 @@ class SetuptoolsMetadata(DirtyCollector):
             setattr(target, attr, orig)
 
     @contextlib.contextmanager
-    def _redirect_stdout(self) -> Generator[None, None, None]:  # pragma: no cover
-        # NOTE: pytest capture doesn't play nice with this, so it is manually tested - if
-        # the program is able to write serialized and parseable to stdout then nothing
-        # else has shit it up, so this works, verified with numpy 1.24.2
-        """
-        Really redirect stdout
+    def _redirect_stdout(self) -> Generator[None, None, None]:
+        # really redirect stdout, based on
+        # https://eli.thegreenplace.net/2015/redirecting-all-kinds-of-stdout-in-python/
 
-        based on https://eli.thegreenplace.net/2015/redirecting-all-kinds-of-stdout-in-python/
-        """
-        if util.envvar("testing") in os.environ:
+        # pytest capture doesn't play nice with this so disable for ftest
+        if os.environ.get("PYTEST_CURRENT_TEST", "").startswith("tests/functional"):
             with self._patch(sys, "stdout", sys.stderr):
                 yield
                 return
-
-        # already redirected
-        if isinstance(sys.stdout, LogStream):
-            yield
-            return
 
         original_stdout_fd = sys.stdout.fileno()
 
@@ -337,7 +328,7 @@ def _finalize_options(self: SetuptoolsDistribution, log: logging.Logger) -> None
             log.warning(f"setup error: {exc}")
 
 
-class LogStream(io.TextIOBase):
+class LogStream(io.TextIOWrapper):
     def write(self, text: str) -> int:
         lines = text.splitlines()
         for line in lines:

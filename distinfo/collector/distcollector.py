@@ -134,7 +134,9 @@ class DistCollector(CollectorMixin, Base):
 
                 if not files:  # pragma: no cover - error path
                     raise FileNotFoundError(f"{path} is empty")
-                cls.clog.spam(f"files: {util.irepr(sorted(files), repr=str)}")
+                cls.clog.spam(
+                    f"files:\n{util.irepr(sorted(files), sep=os.linesep, repr=str)}"
+                )
 
                 if "ext" in kwargs:  # pragma: no ptest cover
                     deepmerge.always_merger.merge(kwargs["ext"], ext)

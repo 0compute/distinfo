@@ -47,12 +47,15 @@ class SetuptoolsMetadata(DirtyCollector):
 
     @util.cached_property
     def setup_py_exists(self) -> bool:
-        # files is None when run in subprocess - check has happened already
         return const.SETUP_PY in self.files
 
     @util.cached_property
     def exists(self) -> bool:
-        return self.setup_py_exists or const.SETUP_CFG in self.files
+        # XXX: this is flaky if it returns directly without creating a local variable -
+        # dk why, same for `PyProjectMetadata.exists`
+        exists = self.setup_py_exists or const.SETUP_CFG in self.files
+        self.log.spam(f"exists: {exists}")
+        return exists
 
     async def _collect_dirty(self) -> bool:
         monkey.patch_setuptools()

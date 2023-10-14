@@ -24,7 +24,10 @@ class PyProjectMetadata(MetadataCollector):
 
     @util.cached_property
     def exists(self) -> bool:
-        return const.PYPROJECT_TOML in self.files
+        # XXX: see `SetuptoolsMetadata.exists`
+        exists = const.PYPROJECT_TOML in self.files
+        self.log.spam(f"exists: {exists}")
+        return exists
 
     async def _collect(self) -> bool:
         try:

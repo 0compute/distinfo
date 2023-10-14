@@ -286,7 +286,7 @@ class BaseDistribution:
                     setattr(self, key, value)
             if key == "requires":
                 for extra in value:
-                    await self._merge_dupe_reqs(extra)
+                    await self._merge_reqs(extra)
 
     async def add_requirements(self, extra: str, *reqstrs: str) -> None:
         if not extra:  # pragma: no ptest cover
@@ -299,9 +299,19 @@ class BaseDistribution:
         if filtered_reqs := set(reqs.values()):
             canonical_extra = canonicalize_name(extra).replace("-", "_")
             self.requires.setdefault(canonical_extra, set()).update(filtered_reqs)
-            await self._merge_dupe_reqs(canonical_extra)
+            await self._merge_reqs(canonical_extra)
 
-    async def _merge_dupe_reqs(self, extra: str) -> None:
+    async def _parse_reqstr(self, reqstr: str, reqs: dict) -> None:
+        try:
+            req = await self.requires._requirement_factory(reqstr)
+        except InvalidRequirement as exc:
+            self.log.debug(f"invalid requirement {reqstr!r}: {exc}")
+        else:
+            # ignore self-alias with no extras - seen in setupmeta
+            if not (req.name == self.name and not req.extras):
+                self._merge_req(req, reqs)
+
+    async def _merge_reqs(self, extra: str) -> None:
         seen: dict[str, Requirement] = {}
         reqs = self.requires.get(extra, set())
         for req in list(reqs):
@@ -309,13 +319,14 @@ class BaseDistribution:
                 reqs.remove(req)
                 req = await self.requires._requirement_factory(req)
                 reqs.add(req)
-            if (base_req := seen.get(req.name + str(req.marker))) is None:
-                seen[req.name + str(req.marker)] = req
-            else:  # pragma: no ptest cover
-                util.raise_on_hit()
-                self.log.debug(f"merge dupe {req!r} of {base_req!r}")
-                base_req &= req
-                reqs.remove(req)
+            self._merge_req(req, seen)
+
+    def _merge_req(self, req: Requirement, seen: dict[str, Requirement]) -> None:
+        if (base_req := seen.get(req.name + str(req.marker))) is None:
+            seen[req.name + str(req.marker)] = req
+        else:
+            self.log.debug(f"merge dupe {req!r} to {base_req!r}")
+            base_req &= req
 
     @staticmethod
     def _filter_value(value: str) -> str | None:
@@ -335,21 +346,6 @@ class BaseDistribution:
         # comma-separated is widely used:
         #   https://packaging.python.org/en/latest/specifications/core-metadata/#keywords
         return set(value.split(" " if " " in value else ","))
-
-    async def _parse_reqstr(self, reqstr: str, reqs: dict) -> None:
-        try:
-            req = await self.requires._requirement_factory(reqstr)
-        except InvalidRequirement as exc:
-            self.log.debug(f"invalid requirement {reqstr!r}: {exc}")
-        else:
-            # ignore self-alias with no extras - seen in setupmeta
-            if not (req.name == self.name and not req.extras):
-                # merge same-named reqs
-                existing_req = reqs.get(req.name + str(req.marker))
-                if existing_req is not None:
-                    existing_req &= req
-                else:
-                    reqs[req.name + str(req.marker)] = req
 
     def _excluded(self, key: str) -> bool:
         # "description" is "readme" in pyproject.toml

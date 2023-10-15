@@ -8,11 +8,11 @@
 /.default.nix
 /.direnv/
 /.dmypy*.json
-/.htmlcov*/
 /.pyinstrument.html
 /.result*
 /YAKSHAVE
 /coverage*.xml
+/coverage-html*/
 /flamegraph.svg
 /pyinstrument.html
 /result*

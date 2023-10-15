@@ -15,34 +15,36 @@ jobs:
         env:
           RUFF_FORMAT: github
           SKIP: mypy
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - run: git diff
         if: failure()
-        with:
-          commit_message: auto linted
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         test:
-          - utest
-          - ftest
-          - atest
+          - unit
+          - functional
+          - acceptance
     env:
-      ARGS: -vv --junit-xml=pytest-${{ matrix.test }}.xml
+      ARGS: --junit-xml=pytest-${{ matrix.test }}.xml -vv
       COV_REPORT: xml
     steps:
       - uses: 0compute/pyproject@main
         with:
           cachix-authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
       - uses: actions/cache@v3
-        if: ${{ matrix.test == 'atest' }}
+        if: ${{ matrix.test == 'acceptance' }}
         with:
           path: /var/tmp/distinfo-test-packages
           key: test-packages-${{ hashFiles('tests/acceptance/test_packages.yaml') }}
-      - run: make ${{ matrix.test }}
+      - run: make test-${{ matrix.test }}
         id: test
         env:
-          COV_REPORT: xml
+          COV_REPORT: html xml
+      - uses: actions/upload-artifact@v3
+        with:
+          name: coverage-html-${{ matrix.test }}
+          path: coverage-html-${{ matrix.test }}
       - uses: actions/upload-artifact@v3
         if: ${{ success() || (failure() && steps.test.conclusion == 'failure') }}
         with:

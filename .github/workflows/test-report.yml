@@ -18,9 +18,9 @@ jobs:
     strategy:
       matrix:
         test:
-          - utest
-          - ftest
-          - atest
+          - unit
+          - functional
+          - acceptance
     steps:
       - uses: dorny/test-reporter@v1.6.0
         with:

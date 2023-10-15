@@ -138,7 +138,7 @@ exclude_lines = [
 # skip_covered = true
 
 [tool.coverage.html]
-directory = ".htmlcov"
+directory = "coverage-html"
 show_contexts = true
 
 [tool.coverage.xml]

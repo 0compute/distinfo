@@ -21,15 +21,15 @@ jobs:
           commit_message: auto linted
   test:
     runs-on: ubuntu-latest
-    env:
-      ARGS: -vv
-      COV_REPORT: xml
     strategy:
       matrix:
         test:
           - utest
           - ftest
           - atest
+    env:
+      ARGS: -vv --junit-xml=pytest-${{ matrix.test }}.xml
+      COV_REPORT: xml
     steps:
       - uses: 0compute/pyproject@main
         with:
@@ -40,8 +40,14 @@ jobs:
           path: /var/tmp/distinfo-test-packages
           key: test-packages-${{ hashFiles('tests/acceptance/test_packages.yaml') }}
       - run: make ${{ matrix.test }}
+        id: test
         env:
           COV_REPORT: xml
+      - uses: actions/upload-artifact@v3
+        if: ${{ success() || (failure() && steps.test.conclusion == 'failure') }}
+        with:
+          name: test-result
+          path: pytest-${{ matrix.test }}.xml
       - uses: coverallsapp/github-action@v2
         with:
           file: coverage-${{ matrix.test }}.xml

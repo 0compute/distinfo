@@ -1,8 +1,8 @@
 # whitelist for vulture
 # ruff: noqa
 # type: ignore
-_.data_file  # unused attribute (.pyproject/covcfg.py:22)
 _.data_file  # unused attribute (covcfg.py:22)
+_.title  # unused attribute (covcfg.py:25)
 SERIAL  # unused variable (distinfo/const.py:10)
 supported_platform  # unused variable (distinfo/distribution.py:58)
 description_content_type  # unused variable (distinfo/distribution.py:64)

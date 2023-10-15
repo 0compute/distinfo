@@ -11,7 +11,3 @@ NUM_PROCESSES ?= logical
 FLAKE_MAX_MINUTES ?= 5
 
 atest: override ARGS += -x --flake-finder --flake-max-minutes=$(FLAKE_MAX_MINUTES)
-
-.PHONY: push
-push:
-	nix-shell --packages cachix --run "nix-build | cachix push distinfo"

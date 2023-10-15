@@ -6,6 +6,7 @@
 /.covcfg-*
 /.coverage*
 /.default.nix
+/.direnv/
 /.dmypy*.json
 /.htmlcov*/
 /.pyinstrument.html

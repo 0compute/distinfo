@@ -119,7 +119,7 @@ source = [
     ".",
 ]
 omit = [
-    ".skel/*",
+    ".pyproject/*",
     "tests/sitecustomize.py",
     "tests/whitelist.py",
 ]
@@ -211,7 +211,7 @@ tmp_path_retention_policy = "failed"
 [tool.ruff]
 extend-exclude = [
     ".result*",
-    ".skel*",
+    ".pyproject*",
     "result*",
 ]
 force-exclude = true

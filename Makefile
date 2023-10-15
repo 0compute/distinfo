@@ -1,4 +1,4 @@
-include .skel/Makefile
+include .pyproject/Makefile
 
 $(eval $(call TEST,ptest,packages))
 

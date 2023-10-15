@@ -1,1 +1,1 @@
-.skel/covcfg.py
+.pyproject/covcfg.py

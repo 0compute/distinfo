@@ -22,7 +22,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      ARGS: -vv
       COV_REPORT: xml
     strategy:
       matrix:

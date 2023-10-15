@@ -21,6 +21,9 @@ jobs:
           commit_message: auto linted
   test:
     runs-on: ubuntu-latest
+    env:
+      ARGS: -vv
+      COV_REPORT: xml
     strategy:
       matrix:
         test:

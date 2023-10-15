@@ -7,22 +7,20 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    env:
-      RUFF_FORMAT: github
-      SKIP: mypy
     steps:
       - uses: 0compute/pyproject@main
         with:
           cachix-authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
       - run: make lint
+        env:
+          RUFF_FORMAT: github
+          SKIP: mypy
       - uses: stefanzweifel/git-auto-commit-action@v5
         if: failure()
         with:
           commit_message: auto linted
   test:
     runs-on: ubuntu-latest
-    env:
-      COV_REPORT: xml
     strategy:
       matrix:
         test:
@@ -38,6 +36,8 @@ jobs:
           path: /var/tmp/distinfo-test-packages
           key: test-packages-${{ hashFiles('tests/acceptance/test_packages.yaml') }}
       - run: make ${{ matrix.test }}
+        env:
+          COV_REPORT: xml
       - uses: coverallsapp/github-action@v2
         with:
           file: coverage-${{ matrix.test }}.xml

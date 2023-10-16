@@ -15,16 +15,10 @@ permissions:
 jobs:
   report:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        test:
-          - unit
-          - functional
-          - acceptance
     steps:
       - uses: dorny/test-reporter@v1.7.0
         with:
           artifact: test-result
-          name: ${{ matrix.test }}
-          path: pytest-${{ matrix.test }}.xml
+          name: Test Report
+          path: pytest-*.xml
           reporter: java-junit

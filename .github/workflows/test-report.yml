@@ -16,7 +16,7 @@ jobs:
   report:
     runs-on: ubuntu-latest
     steps:
-      - uses: dorny/test-reporter@v1.7.0
+      - uses: dorny/test-reporter@v1.8.0
         with:
           artifact: test-result
           name: Test Report
